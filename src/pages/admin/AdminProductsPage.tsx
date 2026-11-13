@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Eye, Search, Check, AlertCircle, Upload, Image as ImageIcon, X, Camera, Tag, Layers, Sparkles, Sliders, Palette } from 'lucide-react';
 import { apiRequest } from '../../services/api';
+import { ProductImageManager, ProductImageItem } from '../../components/ProductImageManager';
+import { saveProductImagesToSupabase, deleteProductImageFromStorage } from '../../lib/supabase';
 
 const PRESET_SIZES_SHIRTS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 const PRESET_SIZES_PANTS = ['28', '30', '32', '34', '36', '38', '40'];
@@ -66,14 +68,20 @@ export const AdminProductsPage: React.FC = () => {
     mrp: 1999,
     selling_price: 1499,
     sku_prefix: '',
-    primary_image_url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
     colors: 'Black, White, Navy Blue',
     sizes: 'S, M, L, XL',
     initial_stock: 15
   });
 
-  const [imagePreview, setImagePreview] = useState<string>('');
-  const [useUrlInput, setUseUrlInput] = useState<boolean>(false);
+  // Multiple product images for Add Form
+  const [addImages, setAddImages] = useState<ProductImageItem[]>([
+    {
+      id: 'default-img-1',
+      url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+      color: '',
+      is_primary: true
+    }
+  ]);
 
   // Edit Product Form State
   const [editForm, setEditForm] = useState({
@@ -89,14 +97,13 @@ export const AdminProductsPage: React.FC = () => {
     mrp: 1999,
     selling_price: 1499,
     sku_prefix: '',
-    primary_image_url: '',
     colors: '',
     sizes: '',
     initial_stock: 15
   });
 
-  const [editImagePreview, setEditImagePreview] = useState<string>('');
-  const [useEditUrlInput, setUseEditUrlInput] = useState<boolean>(false);
+  // Multiple product images for Edit Form
+  const [editImages, setEditImages] = useState<ProductImageItem[]>([]);
 
   const toggleSizeInAddForm = (sizeToToggle: string) => {
     const list = addForm.sizes.split(',').map(s => s.trim()).filter(Boolean);
@@ -154,29 +161,6 @@ export const AdminProductsPage: React.FC = () => {
     setCustomEditColorInput('');
   };
 
-  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean = false) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file (PNG, JPG, WEBP, JPEG)');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64Url = reader.result as string;
-      if (isEdit) {
-        setEditImagePreview(base64Url);
-        setEditForm(f => ({ ...f, primary_image_url: base64Url }));
-      } else {
-        setImagePreview(base64Url);
-        setAddForm(f => ({ ...f, primary_image_url: base64Url }));
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
   const fetchCatalog = async () => {
     try {
       setLoading(true);
@@ -216,6 +200,32 @@ export const AdminProductsPage: React.FC = () => {
         return;
       }
 
+      // Check if any image is currently uploading
+      if (addImages.some(img => img.isUploading)) {
+        alert('Please wait for all image uploads to finish before submitting.');
+        return;
+      }
+
+      // Prepare clean images (never Base64)
+      const cleanImages = addImages
+        .filter(img => img.url && !img.isUploading && !img.url.startsWith('data:image'))
+        .map((img, idx) => ({
+          url: img.url,
+          color: img.color || '',
+          is_primary: img.is_primary,
+          display_order: idx
+        }));
+
+      if (cleanImages.length === 0) {
+        alert('Please upload or provide at least one product image.');
+        return;
+      }
+
+      // Ensure at least one image is marked as primary
+      if (!cleanImages.some(img => img.is_primary)) {
+        cleanImages[0].is_primary = true;
+      }
+
       const variantItems: any[] = [];
       colorList.forEach(color => {
         sizeList.forEach(size => {
@@ -228,18 +238,39 @@ export const AdminProductsPage: React.FC = () => {
         });
       });
 
-      await apiRequest('/products', {
+      const res = await apiRequest('/products', {
         method: 'POST',
         body: JSON.stringify({
           ...addForm,
-          images: [{ url: addForm.primary_image_url, is_primary: true }],
+          images: cleanImages,
           variants: variantItems
         })
       });
 
+      // Save to Supabase PostgreSQL product_images table directly
+      const createdProductId = res.product?.id || `prod-${Date.now()}`;
+      await saveProductImagesToSupabase(
+        createdProductId,
+        cleanImages.map((img, idx) => ({
+          image_url: img.url,
+          color: img.color,
+          is_primary: img.is_primary,
+          display_order: idx
+        }))
+      );
+
       setShowAddModal(false);
+      // Reset add form & images
+      setAddImages([
+        {
+          id: 'default-img-1',
+          url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
+          color: '',
+          is_primary: true
+        }
+      ]);
       await fetchCatalog();
-      alert('Product created successfully with sizes, colors, and material details!');
+      alert('Product created successfully with sizes, colors, material details, and images!');
     } catch (err: any) {
       alert(err.message || 'Failed to create product');
     }
@@ -253,7 +284,18 @@ export const AdminProductsPage: React.FC = () => {
 
     const colorsStr = existingColors.length > 0 ? existingColors.join(', ') : 'Black, White, Navy Blue';
     const sizesStr = existingSizes.length > 0 ? existingSizes.join(', ') : 'S, M, L, XL';
-    const primaryImg = product.primary_image || product.images?.find((i: any) => i.is_primary)?.image_url || product.images?.[0]?.image_url || '';
+
+    // Populate multiple images from product.images
+    const existingImages: ProductImageItem[] = product.images && product.images.length > 0
+      ? product.images.map((img: any, idx: number) => ({
+          id: img.id || `img-${idx}`,
+          url: img.image_url,
+          color: img.color || '',
+          is_primary: img.is_primary ?? (idx === 0)
+        }))
+      : (product.primary_image ? [{ id: 'img-0', url: product.primary_image, color: '', is_primary: true }] : []);
+
+    setEditImages(existingImages);
 
     setEditForm({
       id: product.id,
@@ -268,12 +310,10 @@ export const AdminProductsPage: React.FC = () => {
       mrp: product.mrp,
       selling_price: product.selling_price,
       sku_prefix: product.sku_prefix,
-      primary_image_url: primaryImg,
       colors: colorsStr,
       sizes: sizesStr,
       initial_stock: product.variants?.[0]?.stock || 15
     });
-    setEditImagePreview(primaryImg);
   };
 
   const handleSaveEditProduct = async (e: React.FormEvent) => {
@@ -291,6 +331,31 @@ export const AdminProductsPage: React.FC = () => {
       if (sizeList.length === 0) {
         alert('Please specify at least one size for the product');
         return;
+      }
+
+      // Check if any image is currently uploading
+      if (editImages.some(img => img.isUploading)) {
+        alert('Please wait for all image uploads to finish before saving changes.');
+        return;
+      }
+
+      // Prepare clean images (never Base64)
+      const cleanImages = editImages
+        .filter(img => img.url && !img.isUploading && !img.url.startsWith('data:image'))
+        .map((img, idx) => ({
+          url: img.url,
+          color: img.color || '',
+          is_primary: img.is_primary,
+          display_order: idx
+        }));
+
+      if (cleanImages.length === 0) {
+        alert('Please upload or provide at least one product image.');
+        return;
+      }
+
+      if (!cleanImages.some(img => img.is_primary)) {
+        cleanImages[0].is_primary = true;
       }
 
       const variantItems: any[] = [];
@@ -313,10 +378,21 @@ export const AdminProductsPage: React.FC = () => {
         method: 'PUT',
         body: JSON.stringify({
           ...editForm,
-          images: [{ url: editForm.primary_image_url, is_primary: true }],
+          images: cleanImages,
           variants: variantItems
         })
       });
+
+      // Save to Supabase PostgreSQL product_images table directly
+      await saveProductImagesToSupabase(
+        editingProduct.id,
+        cleanImages.map((img, idx) => ({
+          image_url: img.url,
+          color: img.color,
+          is_primary: img.is_primary,
+          display_order: idx
+        }))
+      );
 
       setEditingProduct(null);
       await fetchCatalog();
@@ -332,6 +408,16 @@ export const AdminProductsPage: React.FC = () => {
     try {
       setProducts(prev => prev.filter(p => p.id !== targetId));
       setDeletingProduct(null);
+
+      // Clean up Supabase Storage images if any
+      if (Array.isArray(deletingProduct.images)) {
+        for (const img of deletingProduct.images) {
+          if (img.image_url) {
+            deleteProductImageFromStorage(img.image_url).catch(() => {});
+          }
+        }
+      }
+
       await apiRequest(`/products/${targetId}`, { method: 'DELETE' });
       await fetchCatalog();
     } catch (err: any) {
@@ -772,61 +858,12 @@ export const AdminProductsPage: React.FC = () => {
                 />
               </div>
 
-              {/* PHOTO UPLOAD SECTION */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="block text-slate-300 font-bold uppercase tracking-wider text-[11px] flex items-center space-x-1.5">
-                    <Camera className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Product Photo</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setUseEditUrlInput(!useEditUrlInput)}
-                    className="text-[11px] text-amber-400 hover:underline font-semibold"
-                  >
-                    {useEditUrlInput ? '📁 Upload Photo File' : '🔗 Paste Image URL'}
-                  </button>
-                </div>
-
-                {!useEditUrlInput ? (
-                  <div className="space-y-3">
-                    {editForm.primary_image_url ? (
-                      <div className="relative bg-neutral-950 border border-amber-500/30 rounded-xl p-3 flex items-center space-x-4 shadow-lg">
-                        <img 
-                          src={editForm.primary_image_url} 
-                          alt="Product Preview" 
-                          className="w-20 h-24 object-cover rounded-lg border border-neutral-700 shadow-md shrink-0"
-                        />
-                        <div className="flex-1 space-y-1 text-xs">
-                          <p className="font-bold text-white flex items-center space-x-1">
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Photo Attached</span>
-                          </p>
-                          <label className="inline-block bg-amber-500/20 hover:bg-amber-500 hover:text-black text-amber-300 font-bold text-[11px] px-3 py-1.5 rounded-lg cursor-pointer transition-colors mt-1">
-                            Replace Photo
-                            <input type="file" accept="image/*" onChange={e => handleImageFileUpload(e, true)} className="hidden" />
-                          </label>
-                        </div>
-                      </div>
-                    ) : (
-                      <label className="border-2 border-dashed border-neutral-700 hover:border-amber-500 bg-neutral-950 p-6 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all space-y-2 text-center">
-                        <Upload className="w-6 h-6 text-amber-400" />
-                        <p className="font-bold text-white text-xs">Click to Upload Photo</p>
-                        <input type="file" accept="image/*" onChange={e => handleImageFileUpload(e, true)} className="hidden" />
-                      </label>
-                    )}
-                  </div>
-                ) : (
-                  <input 
-                    type="text" 
-                    value={editForm.primary_image_url} 
-                    onChange={e => setEditForm({ ...editForm, primary_image_url: e.target.value })} 
-                    placeholder="https://..."
-                    required 
-                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-xl p-3 text-xs"
-                  />
-                )}
-              </div>
+              {/* SUPABASE MULTI-IMAGE GALLERY MANAGER */}
+              <ProductImageManager
+                images={editImages}
+                onChange={setEditImages}
+                availableColors={editForm.colors.split(',')}
+              />
 
               <div>
                 <label className="block text-slate-400 font-semibold mb-1">Care Instructions</label>
@@ -1198,74 +1235,12 @@ export const AdminProductsPage: React.FC = () => {
                 />
               </div>
 
-              {/* PHOTO UPLOAD SECTION */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="block text-slate-300 font-bold uppercase tracking-wider text-[11px] flex items-center space-x-1.5">
-                    <Camera className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Upload Product Photo</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setUseUrlInput(!useUrlInput)}
-                    className="text-[11px] text-amber-400 hover:underline font-semibold"
-                  >
-                    {useUrlInput ? '📁 Switch to Upload Photo File' : '🔗 Paste Image URL instead'}
-                  </button>
-                </div>
-
-                {!useUrlInput ? (
-                  <div className="space-y-3">
-                    {addForm.primary_image_url && (imagePreview || addForm.primary_image_url) ? (
-                      <div className="relative bg-neutral-950 border border-amber-500/30 rounded-xl p-3 flex items-center space-x-4 shadow-lg">
-                        <img 
-                          src={addForm.primary_image_url} 
-                          alt="Product Preview" 
-                          className="w-20 h-24 object-cover rounded-lg border border-neutral-700 shadow-md shrink-0"
-                        />
-                        <div className="flex-1 space-y-1 text-xs">
-                          <p className="font-bold text-white flex items-center space-x-1">
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Photo Attached & Ready</span>
-                          </p>
-                          <label className="inline-block bg-amber-500/20 hover:bg-amber-500 hover:text-black text-amber-300 font-bold text-[11px] px-3 py-1.5 rounded-lg cursor-pointer transition-colors mt-1">
-                            Choose Another Photo
-                            <input type="file" accept="image/*" onChange={e => handleImageFileUpload(e, false)} className="hidden" />
-                          </label>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setImagePreview('');
-                            setAddForm(f => ({ ...f, primary_image_url: '' }));
-                          }}
-                          className="p-1.5 bg-neutral-800 hover:bg-neutral-700 text-slate-400 hover:text-white rounded-lg"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <label className="border-2 border-dashed border-neutral-700 hover:border-amber-500 bg-neutral-950 hover:bg-neutral-900/60 p-6 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all space-y-2 text-center group">
-                        <Upload className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <p className="font-bold text-white text-xs">Click to Upload Photo from Device</p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">Select image file from computer or phone</p>
-                        </div>
-                        <input type="file" accept="image/*" onChange={e => handleImageFileUpload(e, false)} className="hidden" />
-                      </label>
-                    )}
-                  </div>
-                ) : (
-                  <input 
-                    type="text" 
-                    value={addForm.primary_image_url} 
-                    onChange={e => setAddForm({ ...addForm, primary_image_url: e.target.value })} 
-                    placeholder="https://..."
-                    required 
-                    className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-xl p-3 text-xs"
-                  />
-                )}
-              </div>
+              {/* SUPABASE MULTI-IMAGE GALLERY MANAGER */}
+              <ProductImageManager
+                images={addImages}
+                onChange={setAddImages}
+                availableColors={addForm.colors.split(',')}
+              />
 
               <div>
                 <label className="block text-slate-400 font-semibold mb-1">Care Instructions</label>

@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
     "@types/nodemailer": "^8.0.2",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",

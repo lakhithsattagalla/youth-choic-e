@@ -195,6 +195,18 @@ router.post('/', authenticateToken, requireAdmin, (req: AuthRequest, res: Respon
       return res.status(400).json({ error: 'Missing required product fields' });
     }
 
+    // Validate that no Base64 image data is sent through Vercel API routes
+    if (Array.isArray(images)) {
+      for (const img of images) {
+        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
+          return res.status(400).json({
+            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
+          });
+        }
+      }
+    }
+
     const prodId = `prod-${Date.now()}`;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const discount_pct = Math.round(((mrp - selling_price) / mrp) * 100);
@@ -229,14 +241,17 @@ router.post('/', authenticateToken, requireAdmin, (req: AuthRequest, res: Respon
     // Save Images
     if (Array.isArray(images)) {
       images.forEach((img: any, idx: number) => {
-        db.data.product_images.push({
-          id: `img-${prodId}-${idx}`,
-          product_id: prodId,
-          image_url: img.url,
-          color: img.color || '',
-          is_primary: idx === 0 || img.is_primary,
-          display_order: idx
-        });
+        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+        if (urlStr) {
+          db.data.product_images.push({
+            id: `img-${prodId}-${idx}`,
+            product_id: prodId,
+            image_url: urlStr,
+            color: img.color || '',
+            is_primary: idx === 0 || !!img.is_primary,
+            display_order: img.display_order !== undefined ? img.display_order : idx
+          });
+        }
       });
     }
 
@@ -317,20 +332,35 @@ router.put('/:id', authenticateToken, requireAdmin, (req: AuthRequest, res: Resp
 
     db.data.products[prodIndex] = updated;
 
+    // Validate that no Base64 image data is sent through Vercel API routes
+    if (Array.isArray(images)) {
+      for (const img of images) {
+        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
+          return res.status(400).json({
+            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
+          });
+        }
+      }
+    }
+
     // Handle Images update if provided
-    if (Array.isArray(images) && images.length > 0) {
+    if (Array.isArray(images)) {
       // Filter out existing images for this product
       db.data.product_images = db.data.product_images.filter(img => img.product_id !== id);
 
       images.forEach((img: any, idx: number) => {
-        db.data.product_images.push({
-          id: `img-${id}-${idx}-${Date.now()}`,
-          product_id: id,
-          image_url: typeof img === 'string' ? img : img.url,
-          color: img.color || '',
-          is_primary: idx === 0 || img.is_primary,
-          display_order: idx
-        });
+        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+        if (urlStr) {
+          db.data.product_images.push({
+            id: `img-${id}-${idx}-${Date.now()}`,
+            product_id: id,
+            image_url: urlStr,
+            color: img.color || '',
+            is_primary: idx === 0 || !!img.is_primary,
+            display_order: img.display_order !== undefined ? img.display_order : idx
+          });
+        }
       });
     }
 
