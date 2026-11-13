@@ -240,6 +240,19 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
       variants // array of { color, size, stock, sku }
     } = req.body;
 
+    // Validate immediately that no Base64 image data is sent through Vercel API routes
+    if (Array.isArray(images)) {
+      for (const img of images) {
+        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
+          return res.status(400).json({
+            success: false,
+            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
+          });
+        }
+      }
+    }
+
     if (!name || !brand_id || !category_id || !mrp || !selling_price || !sku_prefix) {
       return res.status(400).json({ success: false, message: 'Missing required product fields' });
     }
@@ -249,18 +262,6 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
         await createProductInSupabase(req.body);
       } catch (sbErr) {
         console.warn('[Supabase create product failed, falling back to persistent DB]:', sbErr);
-      }
-    }
-
-    // Validate that no Base64 image data is sent through Vercel API routes
-    if (Array.isArray(images)) {
-      for (const img of images) {
-        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
-        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
-          return res.status(400).json({
-            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
-          });
-        }
       }
     }
 
@@ -356,9 +357,6 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
         }
       }
     }
-  try {
-    const { id } = req.params;
-    const targetId = String(id).trim();
 
     if (isSupabaseConfigured()) {
       try {
