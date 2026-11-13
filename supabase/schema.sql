@@ -89,3 +89,4 @@ CREATE POLICY "Allow admin manage product_images"
 ON public.product_images FOR ALL
 USING (true)
 WITH CHECK (true);
+

@@ -399,3 +399,4 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     </div>
   );
 };
+
