@@ -32,7 +32,7 @@ export const PRODUCT_IMAGES_BUCKET = 'product-images';
 // Validation Rules
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 export const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
-export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+export const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB limit (10,485,760 bytes)
 
 export interface ImageValidationResult {
   valid: boolean;
@@ -42,7 +42,7 @@ export interface ImageValidationResult {
 /**
  * Validates product image file:
  * - Allowed types: JPG, JPEG, PNG, WEBP
- * - Max size: 5 MB
+ * - Max size: 10 MB
  */
 export function validateProductImage(file: File): ImageValidationResult {
   if (!file) {
@@ -64,7 +64,7 @@ export function validateProductImage(file: File): ImageValidationResult {
     const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
     return {
       valid: false,
-      error: `File "${file.name}" is ${sizeInMB} MB. Maximum allowed upload size is 5 MB per image.`
+      error: `Image exceeds the maximum upload size of 10 MB. "${file.name}" is ${sizeInMB} MB.`
     };
   }
 

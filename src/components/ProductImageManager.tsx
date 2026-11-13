@@ -9,18 +9,21 @@ import {
   Loader2,
   Trash2,
   Plus,
-  Link as LinkIcon
+  Link as LinkIcon,
+  RefreshCw
 } from 'lucide-react';
 import {
   uploadProductImageDirect,
   validateProductImage,
   deleteProductImageFromStorage,
-  PRODUCT_IMAGES_BUCKET
+  PRODUCT_IMAGES_BUCKET,
+  MAX_IMAGE_SIZE_BYTES
 } from '../lib/supabase';
 
 export interface ProductImageItem {
   id: string;
   url: string;
+  previewUrl?: string;
   color?: string;
   is_primary: boolean;
   display_order?: number;
@@ -45,6 +48,8 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
+  const [replaceTargetId, setReplaceTargetId] = useState<string | null>(null);
 
   const colorsList = availableColors
     .map(c => c.trim())
@@ -56,47 +61,51 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     if (files.length === 0) return;
 
     for (const file of files) {
-      // 1. Validate image format (JPG, JPEG, PNG, WEBP) and max size 5 MB
+      // 1. Validate image format (JPG, JPEG, PNG, WEBP) and max size 10 MB
       const validation = validateProductImage(file);
       if (!validation.valid) {
-        setUploadError(validation.error || 'Invalid image file');
+        setUploadError(validation.error || 'Image exceeds the maximum upload size of 10 MB.');
         continue;
       }
 
-      // 2. Create placeholder item with progress
+      // 2. Generate instant client-side preview before upload begins
+      const clientPreviewUrl = URL.createObjectURL(file);
       const tempId = `upload-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
       const isFirst = images.length === 0;
 
       const placeholder: ProductImageItem = {
         id: tempId,
-        url: '',
+        url: clientPreviewUrl,
+        previewUrl: clientPreviewUrl,
         color: '',
         is_primary: isFirst,
         isUploading: true,
         uploadProgress: 5
       };
 
-      // Append to list
-      const updatedList = [...images, placeholder];
-      onChange(updatedList);
+      // Append placeholder with preview immediately to UI
+      const currentImages = [...images, placeholder];
+      onChange(currentImages);
 
       // 3. Perform direct browser upload to Supabase Storage bucket 'product-images'
       try {
         const result = await uploadProductImageDirect(file, (percent) => {
           onChange(
-            updatedList.map(item =>
+            currentImages.map(item =>
               item.id === tempId ? { ...item, uploadProgress: percent } : item
             )
           );
         });
 
-        // 4. On success, store the public URL
+        // 4. On success, store the public URL and revoke the client preview
+        URL.revokeObjectURL(clientPreviewUrl);
         onChange(
-          updatedList.map(item =>
+          currentImages.map(item =>
             item.id === tempId
               ? {
                   ...item,
                   url: result.publicUrl,
+                  previewUrl: undefined,
                   isUploading: false,
                   uploadProgress: 100
                 }
@@ -106,12 +115,12 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
       } catch (err: any) {
         const errorMsg =
           err?.message ||
-          `Failed to upload ${file.name}. Ensure the '${PRODUCT_IMAGES_BUCKET}' bucket exists in Supabase.`;
+          `Failed to upload "${file.name}". Verify Supabase Storage 'product-images' bucket settings.`;
         setUploadError(errorMsg);
 
-        // Remove failed placeholder or mark error
+        // Mark error on card
         onChange(
-          updatedList.map(item =>
+          currentImages.map(item =>
             item.id === tempId
               ? { ...item, isUploading: false, error: errorMsg }
               : item
@@ -136,6 +145,87 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     setIsDragging(false);
     if (e.dataTransfer.files) {
       handleFiles(e.dataTransfer.files);
+    }
+  };
+
+  // Image Replacement Handler
+  const triggerReplace = (id: string) => {
+    setReplaceTargetId(id);
+    replaceInputRef.current?.click();
+  };
+
+  const handleReplaceFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !replaceTargetId) return;
+
+    const validation = validateProductImage(file);
+    if (!validation.valid) {
+      setUploadError(validation.error || 'Image exceeds the maximum upload size of 10 MB.');
+      if (replaceInputRef.current) replaceInputRef.current.value = '';
+      return;
+    }
+
+    const clientPreviewUrl = URL.createObjectURL(file);
+    const targetId = replaceTargetId;
+
+    // Show preview and loading state on the target image
+    onChange(
+      images.map(img =>
+        img.id === targetId
+          ? {
+              ...img,
+              previewUrl: clientPreviewUrl,
+              url: clientPreviewUrl,
+              isUploading: true,
+              uploadProgress: 10,
+              error: undefined
+            }
+          : img
+      )
+    );
+
+    try {
+      const result = await uploadProductImageDirect(file, (percent) => {
+        onChange(
+          images.map(img =>
+            img.id === targetId ? { ...img, uploadProgress: percent } : img
+          )
+        );
+      });
+
+      URL.revokeObjectURL(clientPreviewUrl);
+
+      // Clean up old storage image asynchronously if needed
+      const oldImg = images.find(img => img.id === targetId);
+      if (oldImg?.url && !oldImg.url.startsWith('blob:')) {
+        deleteProductImageFromStorage(oldImg.url).catch(() => {});
+      }
+
+      onChange(
+        images.map(img =>
+          img.id === targetId
+            ? {
+                ...img,
+                url: result.publicUrl,
+                previewUrl: undefined,
+                isUploading: false,
+                uploadProgress: 100
+              }
+            : img
+        )
+      );
+    } catch (err: any) {
+      setUploadError(err.message || 'Image replacement failed');
+      onChange(
+        images.map(img =>
+          img.id === targetId
+            ? { ...img, isUploading: false, error: err.message }
+            : img
+        )
+      );
+    } finally {
+      setReplaceTargetId(null);
+      if (replaceInputRef.current) replaceInputRef.current.value = '';
     }
   };
 
@@ -170,8 +260,8 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
 
   const removeImage = async (id: string) => {
     const target = images.find(img => img.id === id);
-    if (target?.url) {
-      // Async clean-up from storage
+    if (target?.url && !target.url.startsWith('blob:')) {
+      // Async clean-up from Supabase Storage
       deleteProductImageFromStorage(target.url).catch(() => {});
     }
     const filtered = images.filter(img => img.id !== id);
@@ -189,15 +279,24 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
 
   return (
     <div className="space-y-3 p-4 bg-neutral-950 border border-neutral-800 rounded-2xl shadow-inner">
+      {/* Hidden input for single image replacement */}
+      <input
+        ref={replaceInputRef}
+        type="file"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        onChange={handleReplaceFileChange}
+        className="hidden"
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <label className="text-amber-400 font-extrabold uppercase tracking-wider text-[11px] flex items-center space-x-1.5">
             <ImageIcon className="w-4 h-4 text-amber-400" />
-            <span>Product Images Gallery (Supabase Storage)</span>
+            <span>Product Images Gallery (Direct Supabase Storage)</span>
           </label>
           <p className="text-[10px] text-slate-400 mt-0.5">
-            JPG, JPEG, PNG, WEBP up to 5 MB per image. Uploads directly to Supabase Storage.
+            JPG, JPEG, PNG, WEBP up to <strong className="text-white">10 MB</strong> per image. High-quality original preservation.
           </p>
         </div>
 
@@ -286,7 +385,7 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
             Click to upload or drag & drop multiple product images
           </p>
           <p className="text-[10px] text-slate-400 mt-0.5">
-            Direct browser upload to Supabase Storage (<span className="text-amber-400 font-mono">product-images</span> bucket). Max 5 MB each.
+            Direct browser upload to Supabase Storage (<span className="text-amber-400 font-mono">{PRODUCT_IMAGES_BUCKET}</span> bucket). Max <strong className="text-amber-300">10 MB</strong> each.
           </p>
         </div>
       </div>
@@ -297,9 +396,14 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
           <div className="flex items-center justify-between text-[11px] text-slate-400">
             <span>
               Attached Images: <strong className="text-white">{images.filter(i => !i.isUploading).length}</strong>
+              {images.some(i => i.isUploading) && (
+                <span className="text-amber-400 ml-2 font-semibold animate-pulse">
+                  (Uploading {images.filter(i => i.isUploading).length} image...)
+                </span>
+              )}
             </span>
             <span className="text-[10px] text-slate-500">
-              Click ★ to set primary cover photo
+              Click ★ for Primary cover photo • 🔁 Replace photo
             </span>
           </div>
 
@@ -313,10 +417,18 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
                     : 'border-neutral-800 hover:border-neutral-700'
                 }`}
               >
-                {/* Image Container */}
+                {/* Image Container with Preview */}
                 <div className="relative aspect-[3/4] w-full bg-black/40 flex items-center justify-center overflow-hidden">
-                  {img.isUploading ? (
-                    <div className="flex flex-col items-center justify-center p-3 text-center space-y-2">
+                  {/* Instant preview: shows client previewUrl or uploaded url */}
+                  <img
+                    src={img.previewUrl || img.url}
+                    alt="Product preview"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Uploading Progress Overlay */}
+                  {img.isUploading && (
+                    <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px] flex flex-col items-center justify-center p-3 text-center space-y-2 z-10">
                       <Loader2 className="w-6 h-6 text-amber-400 animate-spin" />
                       <div className="w-full bg-neutral-800 rounded-full h-1.5 overflow-hidden">
                         <div
@@ -324,49 +436,59 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
                           style={{ width: `${img.uploadProgress || 10}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-mono text-amber-300">
-                        {img.uploadProgress || 10}%
+                      <span className="text-[10px] font-mono text-amber-300 font-bold">
+                        {img.uploadProgress || 10}% Uploading
                       </span>
                     </div>
-                  ) : img.error ? (
-                    <div className="p-2 text-center text-red-400 space-y-1">
-                      <AlertCircle className="w-6 h-6 mx-auto" />
-                      <p className="text-[9px] line-clamp-2">{img.error}</p>
+                  )}
+
+                  {/* Error Overlay */}
+                  {img.error && !img.isUploading && (
+                    <div className="absolute inset-0 bg-red-950/85 p-2 text-center text-red-200 space-y-1 flex flex-col items-center justify-center z-10">
+                      <AlertCircle className="w-5 h-5 text-red-400" />
+                      <p className="text-[9px] line-clamp-3">{img.error}</p>
                     </div>
-                  ) : (
-                    <img
-                      src={img.url}
-                      alt="Product"
-                      className="w-full h-full object-cover"
-                    />
                   )}
 
                   {/* Primary Badge */}
                   {img.is_primary && !img.isUploading && (
-                    <span className="absolute top-1.5 left-1.5 bg-amber-500 text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow flex items-center space-x-0.5">
+                    <span className="absolute top-1.5 left-1.5 bg-amber-500 text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow flex items-center space-x-0.5 z-20">
                       <Star className="w-2.5 h-2.5 fill-black" />
                       <span>PRIMARY</span>
                     </span>
                   )}
 
-                  {/* Top Right Controls */}
+                  {/* Top Right Action Controls */}
                   {!img.isUploading && (
-                    <div className="absolute top-1.5 right-1.5 flex items-center space-x-1">
+                    <div className="absolute top-1.5 right-1.5 flex items-center space-x-1 z-20">
+                      {/* Set Primary Button */}
                       {!img.is_primary && (
                         <button
                           type="button"
                           onClick={() => setPrimary(img.id)}
                           title="Set as Primary Cover Photo"
-                          className="p-1 bg-black/60 hover:bg-amber-500 hover:text-black text-slate-300 rounded-md transition-colors"
+                          className="p-1 bg-black/70 hover:bg-amber-500 hover:text-black text-slate-300 rounded-md transition-colors"
                         >
                           <Star className="w-3.5 h-3.5" />
                         </button>
                       )}
+
+                      {/* Replace Button */}
+                      <button
+                        type="button"
+                        onClick={() => triggerReplace(img.id)}
+                        title="Replace This Image (up to 10 MB)"
+                        className="p-1 bg-black/70 hover:bg-blue-500 hover:text-white text-slate-300 rounded-md transition-colors"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                      </button>
+
+                      {/* Delete Button */}
                       <button
                         type="button"
                         onClick={() => removeImage(img.id)}
-                        title="Remove Image"
-                        className="p-1 bg-black/60 hover:bg-red-600 text-slate-300 hover:text-white rounded-md transition-colors"
+                        title="Delete Image"
+                        className="p-1 bg-black/70 hover:bg-red-600 text-slate-300 hover:text-white rounded-md transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -399,4 +521,3 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     </div>
   );
 };
-

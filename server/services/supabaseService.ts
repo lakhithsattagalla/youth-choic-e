@@ -42,6 +42,101 @@ export function getSupabaseClient(): SupabaseClient | null {
   return supabase;
 }
 
+/**
+ * Ensures the 'product-images' storage bucket exists with 10 MB limit and public read access.
+ */
+export async function ensureStorageBucket() {
+  if (!supabase) return null;
+  try {
+    const bucketName = 'product-images';
+    const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+    if (listError) {
+      console.warn('[Supabase Storage] listBuckets notice:', listError.message);
+      return null;
+    }
+
+    const existing = buckets?.find(b => b.id === bucketName || b.name === bucketName);
+    if (existing) {
+      const { data, error } = await supabase.storage.updateBucket(bucketName, {
+        public: true,
+        fileSizeLimit: 10485760, // 10 MB (10,485,760 bytes)
+        allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+      });
+      if (error) {
+        console.warn('[Supabase Storage] updateBucket notice:', error.message);
+      } else {
+        console.log('[Supabase Storage] Bucket "product-images" updated with 10 MB limit.');
+      }
+      return data || existing;
+    } else {
+      const { data, error } = await supabase.storage.createBucket(bucketName, {
+        public: true,
+        fileSizeLimit: 10485760, // 10 MB (10,485,760 bytes)
+        allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+      });
+      if (error) {
+        console.warn('[Supabase Storage] createBucket notice:', error.message);
+      } else {
+        console.log('[Supabase Storage] Bucket "product-images" created with 10 MB limit.');
+      }
+      return data;
+    }
+  } catch (err: any) {
+    console.warn('[Supabase Storage] ensureStorageBucket error:', err?.message || err);
+    return null;
+  }
+}
+
+/**
+ * Retrieves storage bucket configuration and status
+ */
+export async function getStorageBucketStatus() {
+  if (!supabase) {
+    return {
+      configured: false,
+      bucket: 'product-images',
+      max_size_bytes: 10485760,
+      max_size_mb: 10,
+      allowed_types: ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'],
+      status: 'supabase_not_configured'
+    };
+  }
+  try {
+    const { data: buckets, error } = await supabase.storage.listBuckets();
+    if (error) {
+      return {
+        configured: true,
+        bucket: 'product-images',
+        max_size_bytes: 10485760,
+        max_size_mb: 10,
+        allowed_types: ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'],
+        status: 'error',
+        message: error.message
+      };
+    }
+    const bucket = buckets?.find(b => b.id === 'product-images' || b.name === 'product-images');
+    return {
+      configured: true,
+      bucket: 'product-images',
+      exists: !!bucket,
+      public: bucket ? bucket.public : true,
+      file_size_limit: bucket?.file_size_limit || 10485760,
+      max_size_mb: 10,
+      allowed_mime_types: bucket?.allowed_mime_types || ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'],
+      status: 'active'
+    };
+  } catch (err: any) {
+    return {
+      configured: true,
+      bucket: 'product-images',
+      max_size_bytes: 10485760,
+      max_size_mb: 10,
+      status: 'error',
+      message: err?.message || 'Failed to inspect bucket'
+    };
+  }
+}
+
 // 1. FETCH PRODUCTS
 export async function fetchProductsFromSupabase(includeInactive: boolean = false) {
   if (!supabase) return null;

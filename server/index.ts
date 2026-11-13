@@ -16,8 +16,12 @@ import analyticsRoutes from './routes/analytics.js';
 import whatsappBotRoutes from './routes/whatsappBot.js';
 import aiRoutes from './routes/ai.js';
 import { db } from './db.js';
+import { ensureStorageBucket } from './services/supabaseService.js';
 
 dotenv.config();
+
+// Ensure Supabase Storage bucket 'product-images' is configured with 10 MB limit
+ensureStorageBucket().catch(e => console.warn('[Supabase Storage Init notice]:', e?.message || e));
 
 const app = express();
 const PORT = process.env.PORT || 5000;

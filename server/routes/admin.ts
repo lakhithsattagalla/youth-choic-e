@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { db } from '../db.js';
-import { isSupabaseConfigured, updateVariantStockInSupabase } from '../services/supabaseService.js';
+import { isSupabaseConfigured, updateVariantStockInSupabase, getStorageBucketStatus, ensureStorageBucket } from '../services/supabaseService.js';
 import { calculateCouponStatus, calculateOfferStatus } from '../services/couponHelper.js';
 import { authenticateToken, requireAdmin, AuthRequest } from '../middleware/auth.js';
 import { checkAccountLockout, recordFailedLogin, clearFailedLogin, logSecurityEvent } from '../services/security.js';
@@ -130,6 +130,26 @@ const handleAdminLoginRequest = (req: AuthRequest, res: Response) => {
 // Mount login route aliases on admin router (/api/admin/login & /api/admin/admin-login)
 router.post('/login', handleAdminLoginRequest);
 router.post('/admin-login', handleAdminLoginRequest);
+
+// Supabase Storage Bucket Configuration & Status
+router.get('/storage-status', async (req: AuthRequest, res: Response) => {
+  try {
+    const status = await getStorageBucketStatus();
+    res.json({ success: true, ...status });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to inspect storage bucket' });
+  }
+});
+
+router.post('/storage-configure', authenticateToken, requireAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await ensureStorageBucket();
+    const status = await getStorageBucketStatus();
+    res.json({ success: true, message: 'Storage bucket configured for 10 MB limit', result, status });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to configure storage bucket' });
+  }
+});
 
 // Admin Dashboard Summary Metrics
 router.get('/dashboard-stats', authenticateToken, requireAdmin, (req: AuthRequest, res: Response) => {
