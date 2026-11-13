@@ -46,7 +46,7 @@ export const AdminOrdersPage: React.FC = () => {
 
   const openWhatsAppChat = (phone: string, orderNum: string, name: string) => {
     const cleanPhone = phone.replace(/[^0-9]/g, '');
-    const text = encodeURIComponent(`Hello ${name}! This is Youth Choice Mens Wear regarding your order #${orderNum}.`);
+    const text = encodeURIComponent(`Hello ${name}! This is Youth Choice The Fashion Store regarding your order #${orderNum}.`);
     window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
   };
 

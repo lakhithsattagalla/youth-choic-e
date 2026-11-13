@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { apiRequest } from '../services/api';
+import { AuthModal } from './AuthModal';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
@@ -18,6 +19,9 @@ export const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  const userName = typeof user === 'string' ? user : (user?.name || user?.email || 'User');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,15 +91,17 @@ export const Navbar: React.FC = () => {
 
           {/* Brand Logo & Name */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 flex items-center justify-center font-serif text-black font-bold text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
-              YC
-            </div>
+            <img 
+              src="/yc-logo.jpg" 
+              alt="Youth Choice Logo" 
+              className="w-11 h-11 rounded-xl object-contain bg-white p-1 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300" 
+            />
             <div>
               <span className="font-display font-extrabold tracking-wider text-lg sm:text-xl text-white block leading-none">
                 YOUTH CHOICE
               </span>
-              <span className="text-[10px] tracking-[0.25em] text-amber-400 font-medium block uppercase mt-0.5">
-                MENS WEAR
+              <span className="text-[9px] sm:text-[10px] tracking-[0.2em] text-amber-400 font-medium block uppercase mt-0.5">
+                THE FASHION STORE
               </span>
             </div>
           </Link>
@@ -164,13 +170,16 @@ export const Navbar: React.FC = () => {
             {user ? (
               <div className="relative group">
                 <Link 
-                  to={user.role === 'ADMIN' ? '/admin' : '/account'}
+                  to={user?.role === 'ADMIN' ? '/admin' : '/account'}
                   className="flex items-center space-x-2 text-slate-300 hover:text-amber-400 p-1.5 transition-colors"
                 >
                   <div className="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center font-bold text-xs text-amber-400">
-                    {user.name.charAt(0).toUpperCase()}
+                    {userName.charAt(0).toUpperCase()}
                   </div>
-                  {user.role === 'ADMIN' && (
+                  <span className="hidden sm:inline text-xs font-medium text-slate-200 truncate max-w-[100px]">
+                    Hi, {userName}
+                  </span>
+                  {user?.role === 'ADMIN' && (
                     <span className="hidden sm:inline bg-amber-500/20 text-amber-300 text-[10px] px-2 py-0.5 rounded font-semibold border border-amber-500/30">
                       ADMIN
                     </span>
@@ -181,10 +190,10 @@ export const Navbar: React.FC = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="px-4 py-2 border-b border-neutral-800">
                     <p className="text-xs text-slate-400">Signed in as</p>
-                    <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                    <p className="text-sm font-semibold text-white truncate">{userName}</p>
                   </div>
 
-                  {user.role === 'ADMIN' && (
+                  {user?.role === 'ADMIN' && (
                     <Link to="/admin" className="flex items-center space-x-2 px-4 py-2.5 text-xs text-amber-400 hover:bg-neutral-800 font-medium">
                       <ShieldCheck className="w-4 h-4" />
                       <span>Admin Portal</span>
@@ -208,13 +217,13 @@ export const Navbar: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <Link 
-                to="/login" 
-                className="hidden sm:inline-flex items-center space-x-2 bg-neutral-900 border border-neutral-700 hover:border-amber-500/50 text-slate-200 hover:text-amber-400 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-lg transition-all"
+              <button 
+                onClick={() => setIsAuthOpen(true)}
+                className="hidden sm:inline-flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-lg shadow-md transition-all"
               >
                 <User className="w-3.5 h-3.5" />
-                <span>Login</span>
-              </Link>
+                <span>Sign In</span>
+              </button>
             )}
 
           </div>
@@ -305,15 +314,15 @@ export const Navbar: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-full bg-neutral-800 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
-                      {user.name.charAt(0)}
+                      {userName.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">{user.name}</p>
-                      <p className="text-xs text-slate-400">{user.email}</p>
+                      <p className="text-sm font-semibold text-white">Hi, {userName}</p>
+                      <p className="text-xs text-slate-400">{typeof user === 'string' ? user : (user?.email || user?.phone || '')}</p>
                     </div>
                   </div>
-                  {user.role === 'ADMIN' && (
-                    <Link to="/admin" className="block w-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-center py-2 rounded.lg font-semibold text-xs">
+                  {user?.role === 'ADMIN' && (
+                    <Link to="/admin" className="block w-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-center py-2 rounded-lg font-semibold text-xs">
                       Admin Portal
                     </Link>
                   )}
@@ -322,19 +331,18 @@ export const Navbar: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  <Link to="/login" className="text-center bg-neutral-800 text-white font-semibold text-xs py-2.5 rounded-lg">
-                    Login
-                  </Link>
-                  <Link to="/register" className="text-center bg-amber-500 text-black font-semibold text-xs py-2.5 rounded-lg">
-                    Register
-                  </Link>
-                </div>
+                <button 
+                  onClick={() => { setMobileMenuOpen(false); setIsAuthOpen(true); }}
+                  className="w-full text-center bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold text-xs py-2.5 rounded-lg uppercase tracking-wider shadow-md"
+                >
+                  Sign In / Register
+                </button>
               )}
             </div>
           </div>
         </div>
       )}
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
 };

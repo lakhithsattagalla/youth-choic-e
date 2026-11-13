@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Warehouse, ShoppingCart, Tag, Grid, Users, BarChart3, Settings, LogOut, ExternalLink, Menu, X, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Package, Warehouse, ShoppingCart, Tag, Percent, Grid, Users, BarChart3, Settings, LogOut, ExternalLink, Menu, X, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const AdminLayout: React.FC = () => {
@@ -29,7 +29,8 @@ export const AdminLayout: React.FC = () => {
     { name: 'Brand Management', href: '/admin/brands', icon: Tag },
     { name: 'Category Management', href: '/admin/categories', icon: Grid },
     { name: 'Customer Directory', href: '/admin/customers', icon: Users },
-    { name: 'Coupons & Offers', href: '/admin/coupons', icon: Tag },
+    { name: 'Coupon Discounts', href: '/admin/coupons', icon: Tag },
+    { name: 'Product Offers', href: '/admin/offers', icon: Percent },
     { name: 'Business Analytics', href: '/admin/analytics', icon: BarChart3 },
     { name: 'Store Settings', href: '/admin/settings', icon: Settings }
   ];

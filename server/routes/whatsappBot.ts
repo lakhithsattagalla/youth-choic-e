@@ -3,9 +3,9 @@ import { db } from '../db.js';
 
 const router = Router();
 
-const WHATSAPP_PHONE = process.env.WHATSAPP_PHONE_NUMBER || '919032644552';
-const STORE_NAME = process.env.STORE_NAME || 'Youth Choice Mens Wear';
-const UPI_ID = process.env.UPI_ID || '9032644552@ybl';
+const WHATSAPP_PHONE = process.env.WHATSAPP_PHONE_NUMBER || '918522000504';
+const STORE_NAME = process.env.STORE_NAME || 'Youth Choice The Fashion Store';
+const UPI_ID = process.env.UPI_ID || '8522000504@ybl';
 const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN || 'youth_choice_bot_secret_token_2026';
 
 // Helper to generate dynamic UPI QR code URL
@@ -46,7 +46,7 @@ export function formatAIPaymentBotMessage(orderNumber?: string, customerName?: s
   }
 
   message += `💳 *UPI PAYMENT DETAILS:*\n`;
-  message += `• *GPay / PhonePe / Paytm Number:* 9032644552\n`;
+  message += `• *GPay / PhonePe / Paytm Number:* 8522000504\n`;
   message += `• *UPI ID:* ${UPI_ID}\n`;
   message += `• *Direct Tap to Pay:* ${upiUri}\n\n`;
   message += `🖼️ *SCANNABLE QR CODE IMAGE:* \n${qrUrl}\n\n`;

@@ -8,9 +8,14 @@ export interface ProductCardProps {
     id: string;
     name: string;
     brand_name?: string;
-    selling_price: number;
-    mrp: number;
-    discount_pct: number;
+    price?: number;
+    selling_price?: number;
+    mrp?: number;
+    original_price?: number;
+    discount_pct?: number;
+    discount_percentage?: number;
+    has_offer?: boolean;
+    offer_name?: string;
     rating: number;
     review_count: number;
     primary_image: string;
@@ -26,6 +31,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const isWishlisted = isInWishlist(product.id);
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
+
+  const displayPrice = Number(product.price ?? product.selling_price ?? 0);
+  const displayMrp = Number(product.original_price ?? product.mrp ?? displayPrice);
+  const discountPct = Number(product.discount_percentage ?? product.discount_pct ?? (displayMrp > displayPrice ? Math.round(((displayMrp - displayPrice) / displayMrp) * 100) : 0));
+  const hasOffer = !!product.has_offer || (displayMrp > displayPrice);
 
   const handleWishlistClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,9 +55,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       {/* Discount & Stock Badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-        {product.discount_pct > 0 && (
+        {discountPct > 0 && (
           <span className="bg-amber-500 text-black font-extrabold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded shadow">
-            {product.discount_pct}% OFF
+            {hasOffer ? `SALE ${discountPct}% OFF` : `${discountPct}% OFF`}
           </span>
         )}
         {isOutOfStock && (
@@ -111,11 +121,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div>
             <div className="flex items-baseline space-x-2">
               <span className="text-base font-extrabold text-white">
-                ₹{product.selling_price.toLocaleString()}
+                ₹{displayPrice.toLocaleString()}
               </span>
-              {product.mrp > product.selling_price && (
+              {displayMrp > displayPrice && (
                 <span className="text-xs text-slate-400 line-through">
-                  ₹{product.mrp.toLocaleString()}
+                  ₹{displayMrp.toLocaleString()}
                 </span>
               )}
             </div>

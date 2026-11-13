@@ -48,16 +48,16 @@ export const Home: React.FC = () => {
 
   return (
     <div className="space-y-20 pb-16">
-      
+
       {/* 1. HERO SECTION */}
-      <section 
+      <section
         className="relative min-h-[90vh] py-16 flex items-center justify-center overflow-hidden border-b border-neutral-800"
       >
         {/* Background Image & Gradient overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80" 
-            alt="Youth Choice Mens Wear Hero"
+          <img
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&auto=format&fit=crop&q=80"
+            alt="Youth Choice The Fashion Store Hero"
             className="w-full h-full object-cover object-center scale-105 filter brightness-50"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-black/60 to-transparent" />
@@ -66,7 +66,7 @@ export const Home: React.FC = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center space-y-6">
-          
+
           {/* Top Collection Badge */}
           <div className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold uppercase tracking-[0.25em] px-4 py-2 rounded-full backdrop-blur">
             <Sparkles className="w-3.5 h-3.5" />
@@ -86,17 +86,17 @@ export const Home: React.FC = () => {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <Link 
-              to="/men" 
-              className="animate-shimmer-sweep bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-amber-500/20 flex items-center space-x-3 transition-all hover:scale-105"
+            <Link
+              to="/men"
+              className="animate-shimmer-sweep bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-amber-500/20 flex items-center justify-center space-x-3 transition-all hover:scale-105 min-w-[190px] sm:min-w-[210px]"
             >
               <span>SHOP MEN</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
-            <Link 
-              to="/women" 
-              className="bg-neutral-900/80 hover:bg-neutral-800 text-white font-bold text-sm uppercase tracking-wider px-8 py-4 rounded-xl border border-neutral-700 hover:border-amber-400 flex items-center space-x-3 transition-all backdrop-blur"
+            <Link
+              to="/women"
+              className="animate-shimmer-sweep bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-amber-500/20 flex items-center justify-center space-x-3 transition-all hover:scale-105 min-w-[190px] sm:min-w-[210px]"
             >
               <span>SHOP WOMEN</span>
               <ArrowRight className="w-4 h-4" />
@@ -111,7 +111,7 @@ export const Home: React.FC = () => {
             </div>
             <div className="glass-card p-4 rounded-2xl border border-neutral-800 hover:border-amber-500/40 transition-all duration-300 transform hover:-translate-y-1">
               <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 block">100%</span>
-              <span className="text-xs text-slate-400 font-medium">Original Menswear</span>
+              <span className="text-xs text-slate-400 font-medium">Original Mens & Womenswear</span>
             </div>
             <div className="glass-card p-4 rounded-2xl border border-neutral-800 hover:border-amber-500/40 transition-all duration-300 transform hover:-translate-y-1">
               <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 block">Direct</span>
@@ -127,8 +127,8 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Floating WhatsApp Interactive FAB */}
-      <a 
-        href="https://wa.me/919032644552"
+      <a
+        href="https://wa.me/918522000504"
         target="_blank"
         rel="noreferrer"
         className="fixed bottom-20 right-6 z-40 animate-pulse-ring bg-emerald-500 hover:bg-emerald-400 text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center transition-all transform hover:scale-110 group"
@@ -155,14 +155,14 @@ export const Home: React.FC = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.slice(0, 10).map((cat) => (
-            <Link 
-              key={cat.id} 
+            <Link
+              key={cat.id}
               to={`/products?category=${cat.slug}`}
               className="group relative h-60 rounded-2xl overflow-hidden border border-neutral-800 hover:border-amber-500/40 transition-all duration-300"
             >
-              <img 
-                src={cat.image_url} 
-                alt={cat.name} 
+              <img
+                src={cat.image_url}
+                alt={cat.name}
                 className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
@@ -212,8 +212,8 @@ export const Home: React.FC = () => {
               Upgrade your wardrobe with our newest drops in heavy cotton tees, washed denim jackets, and tailored trousers.
             </p>
             <div>
-              <Link 
-                to="/offers" 
+              <Link
+                to="/offers"
                 className="inline-flex items-center space-x-3 bg-amber-500 text-black font-extrabold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl hover:bg-amber-400 transition-colors"
               >
                 <span>CLAIM DISCOUNT</span>
@@ -222,8 +222,8 @@ export const Home: React.FC = () => {
             </div>
           </div>
           <div className="relative min-h-[280px]">
-            <img 
-              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80" 
+            <img
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80"
               alt="Sale Offer"
               className="w-full h-full object-cover"
             />
@@ -261,7 +261,7 @@ export const Home: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {editorialGuides.map((guide, idx) => (
-            <Link 
+            <Link
               key={idx}
               to={guide.link}
               className="group relative h-80 rounded-2xl overflow-hidden border border-neutral-800 hover:border-amber-500/50 transition-all"
@@ -410,9 +410,9 @@ export const Home: React.FC = () => {
           </p>
 
           <div>
-            <a 
-              href="https://wa.me/919032644552?text=Hello%20Youth%20Choice%20Mens%20Wear!%20I%20would%20like%20to%20inquire%20about%20your%20latest%20menswear%20collection." 
-              target="_blank" 
+            <a
+              href="https://wa.me/918522000504?text=Hello%20Youth%20Choice%20The%20Fashion%20Store!%20I%20would%20like%20to%20inquire%20about%20your%20latest%20fashion%20collection."
+              target="_blank"
               rel="noreferrer"
               className="inline-flex items-center space-x-3 bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-emerald-500/20 transition-all hover:scale-105"
             >

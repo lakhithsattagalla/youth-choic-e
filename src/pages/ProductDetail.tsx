@@ -31,6 +31,35 @@ export const ProductDetail: React.FC = () => {
   const [newRating, setNewRating] = useState<number>(5);
   const [newComment, setNewComment] = useState<string>('');
 
+  // Countdown timer state
+  const [timeLeft, setTimeLeft] = useState<{ days: string; hours: string; mins: string; secs: string }>({ days: '00', hours: '00', mins: '00', secs: '00' });
+
+  useEffect(() => {
+    if (!productData?.offer_end_at) return;
+    const updateCountdown = () => {
+      const diffMs = new Date(productData.offer_end_at).getTime() - Date.now();
+      if (diffMs <= 0) {
+        setTimeLeft({ days: '00', hours: '00', mins: '00', secs: '00' });
+        return;
+      }
+      const d = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diffMs / (1000 * 60)) % 60);
+      const s = Math.floor((diffMs / 1000) % 60);
+
+      setTimeLeft({
+        days: String(d).padStart(2, '0'),
+        hours: String(h).padStart(2, '0'),
+        mins: String(m).padStart(2, '0'),
+        secs: String(s).padStart(2, '0')
+      });
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, [productData?.offer_end_at]);
+
   useEffect(() => {
     if (!id) return;
     setLoading(true);
@@ -219,18 +248,55 @@ export const ProductDetail: React.FC = () => {
             </div>
           </div>
 
+          {/* Active Product Offer Banner & Countdown */}
+          {productData.has_offer && (
+            <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/40 p-4 rounded-2xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-extrabold text-amber-400 uppercase tracking-wider">
+                  🔥 {productData.offer_name || 'SPECIAL PRODUCT OFFER'}
+                </span>
+                <span className="text-[10px] bg-amber-500 text-black font-extrabold px-2.5 py-0.5 rounded uppercase tracking-wider">
+                  LIMITED TIME SALE
+                </span>
+              </div>
+
+              {productData.offer_end_at && (
+                <div className="flex items-center space-x-3 pt-1">
+                  <span className="text-[11px] text-slate-300 font-semibold uppercase tracking-wider">SALE ENDS IN:</span>
+                  <div className="flex items-center space-x-1.5 font-mono text-xs font-bold text-amber-300">
+                    <span className="bg-neutral-950 px-2 py-1 rounded border border-neutral-800">{timeLeft.days}d</span>
+                    <span>:</span>
+                    <span className="bg-neutral-950 px-2 py-1 rounded border border-neutral-800">{timeLeft.hours}h</span>
+                    <span>:</span>
+                    <span className="bg-neutral-950 px-2 py-1 rounded border border-neutral-800">{timeLeft.mins}m</span>
+                    <span>:</span>
+                    <span className="bg-neutral-950 px-2 py-1 rounded border border-neutral-800">{timeLeft.secs}s</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Pricing */}
-          <div className="p-4 bg-neutral-900 border border-neutral-800 rounded-xl flex items-baseline space-x-4">
-            <span className="text-3xl font-extrabold text-white">₹{productData.selling_price?.toLocaleString()}</span>
-            {productData.mrp > productData.selling_price && (
-              <span className="text-base text-slate-400 line-through">₹{productData.mrp?.toLocaleString()}</span>
-            )}
-            {productData.discount_pct > 0 && (
-              <span className="text-xs text-amber-400 font-bold bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded">
-                Save ₹{(productData.mrp - productData.selling_price).toLocaleString()}
-              </span>
-            )}
-          </div>
+          {(() => {
+            const displayPrice = Number(productData.price ?? productData.selling_price ?? 0);
+            const displayMrp = Number(productData.original_price ?? productData.mrp ?? displayPrice);
+            const discountPct = Number(productData.discount_percentage ?? productData.discount_pct ?? (displayMrp > displayPrice ? Math.round(((displayMrp - displayPrice) / displayMrp) * 100) : 0));
+
+            return (
+              <div className="p-4 bg-neutral-900 border border-neutral-800 rounded-2xl flex flex-wrap items-baseline gap-3">
+                <span className="text-3xl font-extrabold text-white">₹{displayPrice.toLocaleString()}</span>
+                {displayMrp > displayPrice && (
+                  <span className="text-base text-slate-400 line-through">₹{displayMrp.toLocaleString()}</span>
+                )}
+                {discountPct > 0 && (
+                  <span className="text-xs text-amber-400 font-extrabold bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full uppercase tracking-wider">
+                    Save ₹{(displayMrp - displayPrice).toLocaleString()} ({discountPct}% OFF)
+                  </span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Error / Success Notifications */}
           {errorMsg && (

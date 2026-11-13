@@ -2,10 +2,10 @@
   "users": [
     {
       "id": "user-admin-1",
-      "email": "admin@youthchoice.com",
-      "password_hash": "$2a$10$Fis0U2ft5BnMunOExAg8oedNYPuBTSiejq4ZpsShrrVYf6mFCKMIm",
+      "email": "youthchoicemenswear@gmail.com",
+      "password_hash": "$2a$10$/8fZITQLEn4hh8x5JmjIxeJcJeRVPYuv31yDuVSXV.6sV6FTMf3Oy",
       "name": "Youth Choice Admin",
-      "phone": "+919032644552",
+      "phone": "+918522000504",
       "role": "ADMIN",
       "gender": "MALE",
       "created_at": "2026-09-21T12:42:13.910Z"
@@ -59,6 +59,26 @@
       "role": "CUSTOMER",
       "gender": "MALE",
       "created_at": "2026-10-01T05:16:47.744Z"
+    },
+    {
+      "id": "user-1790873510638",
+      "email": "shireesha1000@gmail.com",
+      "password_hash": "$2a$10$uTec4GLzlV7kWenJJqqrMeMZQNbasJY8jplTPT46NLJ05.UOsZJYu",
+      "name": "shireesha",
+      "phone": "+91 7995027616",
+      "role": "CUSTOMER",
+      "gender": "MALE",
+      "created_at": "2026-10-01T16:51:50.749Z"
+    },
+    {
+      "id": "user-1790873825171",
+      "email": "gandhamsatwik2025@gmail.com",
+      "password_hash": "$2a$10$hLrXXLzWdYpJp6F37pnmMOTj3J5hnJMZ.oyPNBs9B/7oBZofXLL7i",
+      "name": "gandham",
+      "phone": "+91 8897911679",
+      "role": "CUSTOMER",
+      "gender": "MALE",
+      "created_at": "2026-10-01T16:57:05.304Z"
     }
   ],
   "addresses": [
@@ -96,6 +116,18 @@
       "city": "Hyderabad",
       "state": "Telangana",
       "pincode": "500034",
+      "is_default": true
+    },
+    {
+      "id": "addr-1791042517326",
+      "user_id": "user-1790831807552",
+      "type": "HOME",
+      "recipient_name": "sai charan",
+      "phone": "+91 6300614514",
+      "street": "Mahabubnagar",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "pincode": "5009001",
       "is_default": true
     }
   ],
@@ -336,1561 +368,14 @@
       "created_at": "2026-09-21T12:42:13.910Z"
     }
   ],
-  "products": [
-    {
-      "id": "prod-2",
-      "name": "Classic Pique Cotton Slim Polo T-Shirt",
-      "slug": "classic-pique-cotton-slim-polo-t-shirt",
-      "brand_id": "brand-allen-solly",
-      "category_id": "cat-men-tshirts",
-      "gender": "MEN",
-      "description": "Timeless short-sleeve polo shirt with ribbed collar, 2-button placket, and embroidered chest emblem.",
-      "material": "95% Pique Cotton, 5% Elastane",
-      "fit": "Slim Fit",
-      "care_instructions": "Warm machine wash with like colors.",
-      "mrp": 1799,
-      "selling_price": 1299,
-      "discount_pct": 28,
-      "sku_prefix": "YCMC-POLO-02",
-      "rating": 4.6,
-      "review_count": 28,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": false,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-3",
-      "name": "511 Slim Fit Tapered Stretch Denim Jeans",
-      "slug": "511-slim-fit-tapered-stretch-denim-jeans",
-      "brand_id": "brand-levis",
-      "category_id": "cat-men-jeans",
-      "gender": "MEN",
-      "description": "A modern slim with room to move. Designed with iconic 5-pocket styling and comfort stretch technology.",
-      "material": "98% Cotton, 2% Elastane Denim",
-      "fit": "Slim Tapered Fit",
-      "care_instructions": "Wash inside out with cold water.",
-      "mrp": 3999,
-      "selling_price": 2799,
-      "discount_pct": 30,
-      "sku_prefix": "YCMC-JNS-03",
-      "rating": 4.9,
-      "review_count": 64,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-4",
-      "name": "Relaxed Tactical Multi-Pocket Cargo Pants",
-      "slug": "relaxed-tactical-multi-pocket-cargo-pants",
-      "brand_id": "brand-zara",
-      "category_id": "cat-men-cargo",
-      "gender": "MEN",
-      "description": "Urban military-inspired cargo trousers featuring dual snap side pockets, drawcord cuff hem, and articulated knee joints.",
-      "material": "100% Ripstop Cotton Twill",
-      "fit": "Relaxed Tapered",
-      "care_instructions": "Machine wash 30°C.",
-      "mrp": 2999,
-      "selling_price": 2199,
-      "discount_pct": 27,
-      "sku_prefix": "YCMC-CRG-04",
-      "rating": 4.7,
-      "review_count": 35,
-      "is_featured": false,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-5",
-      "name": "Casual Breathable Pure Linen Button-Down Shirt",
-      "slug": "casual-breathable-pure-linen-button-down-shirt",
-      "brand_id": "brand-lp",
-      "category_id": "cat-men-shirts",
-      "gender": "MEN",
-      "description": "Ultra-lightweight French flax linen tailored for warm weather elegance. Features spread collar and pearlized buttons.",
-      "material": "100% Pure French Linen",
-      "fit": "Regular Fit",
-      "care_instructions": "Dry clean or gentle hand wash.",
-      "mrp": 3499,
-      "selling_price": 2499,
-      "discount_pct": 29,
-      "sku_prefix": "YCMC-SHRT-05",
-      "rating": 4.8,
-      "review_count": 51,
-      "is_featured": true,
-      "is_trending": false,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-6",
-      "name": "Essential Fleece Pullover Streetwear Hoodie",
-      "slug": "essential-fleece-pullover-streetwear-hoodie",
-      "brand_id": "brand-nike",
-      "category_id": "cat-men-hoodies",
-      "gender": "MEN",
-      "description": "Heavy fleece-lined double hoodie with kangaroo pouch pocket, metal aglet drawstrings, and snug rib cuffs.",
-      "material": "80% Cotton, 20% Polyester Brushed Fleece",
-      "fit": "Relaxed Streetwear Fit",
-      "care_instructions": "Machine wash cold, tumble dry low.",
-      "mrp": 3299,
-      "selling_price": 2399,
-      "discount_pct": 27,
-      "sku_prefix": "YCMC-HD-06",
-      "rating": 4.9,
-      "review_count": 89,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": false,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-7",
-      "name": "Vintage Trucker Washed Denim Jacket",
-      "slug": "vintage-trucker-washed-denim-jacket",
-      "brand_id": "brand-levis",
-      "category_id": "cat-men-jackets",
-      "gender": "MEN",
-      "description": "Classic 90s vintage wash trucker jacket with shank buttons, chest flap pockets, and adjustable side tabs.",
-      "material": "100% Rigid Heavy Cotton Denim",
-      "fit": "Regular Fit",
-      "care_instructions": "Wash inside out in cold water.",
-      "mrp": 4999,
-      "selling_price": 3499,
-      "discount_pct": 30,
-      "sku_prefix": "YCMC-JKT-07",
-      "rating": 4.7,
-      "review_count": 31,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-8",
-      "name": "Non-Iron Executive Formal Cotton Shirt",
-      "slug": "non-iron-executive-formal-cotton-shirt",
-      "brand_id": "brand-van-heusen",
-      "category_id": "cat-men-shirts",
-      "gender": "MEN",
-      "description": "Wrinkle-resistant pinpoint oxford weave formal shirt built for 14-hour workday crispness.",
-      "material": "100% Superfine Compact Cotton",
-      "fit": "Structured Slim Fit",
-      "care_instructions": "Machine wash warm, tumble dry, warm iron if needed.",
-      "mrp": 2499,
-      "selling_price": 1899,
-      "discount_pct": 24,
-      "sku_prefix": "YCMC-FRM-08",
-      "rating": 4.6,
-      "review_count": 47,
-      "is_featured": false,
-      "is_trending": false,
-      "is_new_arrival": false,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-9",
-      "name": "Retro Low-Top Leather Casual Sneakers",
-      "slug": "retro-low-top-leather-casual-sneakers",
-      "brand_id": "brand-puma",
-      "category_id": "cat-men-footwear",
-      "gender": "MEN",
-      "description": "Heritage court sneakers crafted with genuine leather uppers, cushioned foam footbed, and durable rubber traction sole.",
-      "material": "Genuine Leather Upper, Rubber Sole",
-      "fit": "True to Size",
-      "care_instructions": "Wipe clean with a damp cloth.",
-      "mrp": 4499,
-      "selling_price": 3199,
-      "discount_pct": 29,
-      "sku_prefix": "YCMC-SNK-09",
-      "rating": 4.9,
-      "review_count": 73,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-10",
-      "name": "Oversized Cotton Casual Drop Top",
-      "slug": "women-oversized-cotton-casual-drop-top",
-      "brand_id": "brand-hm",
-      "category_id": "cat-women-tops",
-      "gender": "WOMEN",
-      "description": "Chic relaxed drop-shoulder knit top designed for modern casual layering.",
-      "material": "100% Organic Soft Knit Cotton",
-      "fit": "Relaxed Fit",
-      "care_instructions": "Machine wash 30°C.",
-      "mrp": 1499,
-      "selling_price": 999,
-      "discount_pct": 33,
-      "sku_prefix": "YCMC-WTO-10",
-      "rating": 4.7,
-      "review_count": 29,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-11",
-      "name": "Boho Floral Print Tiered Summer Dress",
-      "slug": "boho-floral-print-tiered-summer-dress",
-      "brand_id": "brand-zara",
-      "category_id": "cat-women-dresses",
-      "gender": "WOMEN",
-      "description": "Flowy midi summer dress featuring delicate floral botanical prints, waist cinch tie, and breathable fabric.",
-      "material": "100% Viscose Rayon",
-      "fit": "Flowy A-Line Fit",
-      "care_instructions": "Hand wash cold.",
-      "mrp": 2999,
-      "selling_price": 2199,
-      "discount_pct": 27,
-      "sku_prefix": "YCMC-WDR-11",
-      "rating": 4.8,
-      "review_count": 38,
-      "is_featured": true,
-      "is_trending": true,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "prod-12",
-      "name": "Handcrafted Chanderi Silk Designer Kurti",
-      "slug": "handcrafted-chanderi-silk-designer-kurti",
-      "brand_id": "brand-peter-england",
-      "category_id": "cat-women-kurtis",
-      "gender": "WOMEN",
-      "description": "Traditional Chanderi silk straight kurti featuring intricate zari embroidery work along neck and sleeves.",
-      "material": "Chanderi Silk Blend with Cotton Lining",
-      "fit": "Straight Fit",
-      "care_instructions": "Dry clean only.",
-      "mrp": 3499,
-      "selling_price": 2399,
-      "discount_pct": 31,
-      "sku_prefix": "YCMC-WKR-12",
-      "rating": 4.9,
-      "review_count": 55,
-      "is_featured": true,
-      "is_trending": false,
-      "is_new_arrival": true,
-      "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    }
-  ],
-  "product_images": [
-    {
-      "id": "img-prod-2-0",
-      "product_id": "prod-2",
-      "image_url": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&auto=format&fit=crop&q=80",
-      "color": "Olive",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-2-1",
-      "product_id": "prod-2",
-      "image_url": "https://images.unsplash.com/photo-1625910513413-56360c78f142?w=800&auto=format&fit=crop&q=80",
-      "color": "Beige",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-3-0",
-      "product_id": "prod-3",
-      "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80",
-      "color": "Charcoal",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-3-1",
-      "product_id": "prod-3",
-      "image_url": "https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=800&auto=format&fit=crop&q=80",
-      "color": "Navy Blue",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-4-0",
-      "product_id": "prod-4",
-      "image_url": "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&auto=format&fit=crop&q=80",
-      "color": "Black",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-4-1",
-      "product_id": "prod-4",
-      "image_url": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&auto=format&fit=crop&q=80",
-      "color": "Olive",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-5-0",
-      "product_id": "prod-5",
-      "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80",
-      "color": "White",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-5-1",
-      "product_id": "prod-5",
-      "image_url": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
-      "color": "Beige",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-6-0",
-      "product_id": "prod-6",
-      "image_url": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80",
-      "color": "Black",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-6-1",
-      "product_id": "prod-6",
-      "image_url": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=800&auto=format&fit=crop&q=80",
-      "color": "Gray",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-7-0",
-      "product_id": "prod-7",
-      "image_url": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&auto=format&fit=crop&q=80",
-      "color": "Navy Blue",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-8-0",
-      "product_id": "prod-8",
-      "image_url": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&auto=format&fit=crop&q=80",
-      "color": "White",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-9-0",
-      "product_id": "prod-9",
-      "image_url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop&q=80",
-      "color": "White",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-10-0",
-      "product_id": "prod-10",
-      "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80",
-      "color": "Beige",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-10-1",
-      "product_id": "prod-10",
-      "image_url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&auto=format&fit=crop&q=80",
-      "color": "White",
-      "is_primary": false,
-      "display_order": 2
-    },
-    {
-      "id": "img-prod-11-0",
-      "product_id": "prod-11",
-      "image_url": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&auto=format&fit=crop&q=80",
-      "color": "Red",
-      "is_primary": true,
-      "display_order": 1
-    },
-    {
-      "id": "img-prod-12-0",
-      "product_id": "prod-12",
-      "image_url": "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800&auto=format&fit=crop&q=80",
-      "color": "Navy Blue",
-      "is_primary": true,
-      "display_order": 1
-    }
-  ],
-  "product_variants": [
-    {
-      "id": "var-prod-2-Olive-M",
-      "product_id": "prod-2",
-      "color": "Olive",
-      "size": "M",
-      "sku": "YCMC-POLO-02-OL-M",
-      "stock": 14,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-2-Olive-L",
-      "product_id": "prod-2",
-      "color": "Olive",
-      "size": "L",
-      "sku": "YCMC-POLO-02-OL-L",
-      "stock": 13,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-2-Olive-XL",
-      "product_id": "prod-2",
-      "color": "Olive",
-      "size": "XL",
-      "sku": "YCMC-POLO-02-OL-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-2-Beige-M",
-      "product_id": "prod-2",
-      "color": "Beige",
-      "size": "M",
-      "sku": "YCMC-POLO-02-BE-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-2-Beige-L",
-      "product_id": "prod-2",
-      "color": "Beige",
-      "size": "L",
-      "sku": "YCMC-POLO-02-BE-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-2-Beige-XL",
-      "product_id": "prod-2",
-      "color": "Beige",
-      "size": "XL",
-      "sku": "YCMC-POLO-02-BE-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Charcoal-S",
-      "product_id": "prod-3",
-      "color": "Charcoal",
-      "size": "S",
-      "sku": "YCMC-JNS-03-CH-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Charcoal-M",
-      "product_id": "prod-3",
-      "color": "Charcoal",
-      "size": "M",
-      "sku": "YCMC-JNS-03-CH-M",
-      "stock": 14,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Charcoal-L",
-      "product_id": "prod-3",
-      "color": "Charcoal",
-      "size": "L",
-      "sku": "YCMC-JNS-03-CH-L",
-      "stock": 0,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Charcoal-XL",
-      "product_id": "prod-3",
-      "color": "Charcoal",
-      "size": "XL",
-      "sku": "YCMC-JNS-03-CH-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Navy Blue-S",
-      "product_id": "prod-3",
-      "color": "Navy Blue",
-      "size": "S",
-      "sku": "YCMC-JNS-03-NA-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Navy Blue-M",
-      "product_id": "prod-3",
-      "color": "Navy Blue",
-      "size": "M",
-      "sku": "YCMC-JNS-03-NA-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Navy Blue-L",
-      "product_id": "prod-3",
-      "color": "Navy Blue",
-      "size": "L",
-      "sku": "YCMC-JNS-03-NA-L",
-      "stock": 2,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-3-Navy Blue-XL",
-      "product_id": "prod-3",
-      "color": "Navy Blue",
-      "size": "XL",
-      "sku": "YCMC-JNS-03-NA-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Black-M",
-      "product_id": "prod-4",
-      "color": "Black",
-      "size": "M",
-      "sku": "YCMC-CRG-04-BL-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Black-L",
-      "product_id": "prod-4",
-      "color": "Black",
-      "size": "L",
-      "sku": "YCMC-CRG-04-BL-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Black-XL",
-      "product_id": "prod-4",
-      "color": "Black",
-      "size": "XL",
-      "sku": "YCMC-CRG-04-BL-XL",
-      "stock": 14,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Black-XXL",
-      "product_id": "prod-4",
-      "color": "Black",
-      "size": "XXL",
-      "sku": "YCMC-CRG-04-BL-XXL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Olive-M",
-      "product_id": "prod-4",
-      "color": "Olive",
-      "size": "M",
-      "sku": "YCMC-CRG-04-OL-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Olive-L",
-      "product_id": "prod-4",
-      "color": "Olive",
-      "size": "L",
-      "sku": "YCMC-CRG-04-OL-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Olive-XL",
-      "product_id": "prod-4",
-      "color": "Olive",
-      "size": "XL",
-      "sku": "YCMC-CRG-04-OL-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-4-Olive-XXL",
-      "product_id": "prod-4",
-      "color": "Olive",
-      "size": "XXL",
-      "sku": "YCMC-CRG-04-OL-XXL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-White-S",
-      "product_id": "prod-5",
-      "color": "White",
-      "size": "S",
-      "sku": "YCMC-SHRT-05-WH-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-White-M",
-      "product_id": "prod-5",
-      "color": "White",
-      "size": "M",
-      "sku": "YCMC-SHRT-05-WH-M",
-      "stock": 12,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-White-L",
-      "product_id": "prod-5",
-      "color": "White",
-      "size": "L",
-      "sku": "YCMC-SHRT-05-WH-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-White-XL",
-      "product_id": "prod-5",
-      "color": "White",
-      "size": "XL",
-      "sku": "YCMC-SHRT-05-WH-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-Beige-S",
-      "product_id": "prod-5",
-      "color": "Beige",
-      "size": "S",
-      "sku": "YCMC-SHRT-05-BE-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-Beige-M",
-      "product_id": "prod-5",
-      "color": "Beige",
-      "size": "M",
-      "sku": "YCMC-SHRT-05-BE-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-Beige-L",
-      "product_id": "prod-5",
-      "color": "Beige",
-      "size": "L",
-      "sku": "YCMC-SHRT-05-BE-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-5-Beige-XL",
-      "product_id": "prod-5",
-      "color": "Beige",
-      "size": "XL",
-      "sku": "YCMC-SHRT-05-BE-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Black-S",
-      "product_id": "prod-6",
-      "color": "Black",
-      "size": "S",
-      "sku": "YCMC-HD-06-BL-S",
-      "stock": 3,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Black-M",
-      "product_id": "prod-6",
-      "color": "Black",
-      "size": "M",
-      "sku": "YCMC-HD-06-BL-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Black-L",
-      "product_id": "prod-6",
-      "color": "Black",
-      "size": "L",
-      "sku": "YCMC-HD-06-BL-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Black-XL",
-      "product_id": "prod-6",
-      "color": "Black",
-      "size": "XL",
-      "sku": "YCMC-HD-06-BL-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Black-XXL",
-      "product_id": "prod-6",
-      "color": "Black",
-      "size": "XXL",
-      "sku": "YCMC-HD-06-BL-XXL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Gray-S",
-      "product_id": "prod-6",
-      "color": "Gray",
-      "size": "S",
-      "sku": "YCMC-HD-06-GR-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Gray-M",
-      "product_id": "prod-6",
-      "color": "Gray",
-      "size": "M",
-      "sku": "YCMC-HD-06-GR-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Gray-L",
-      "product_id": "prod-6",
-      "color": "Gray",
-      "size": "L",
-      "sku": "YCMC-HD-06-GR-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Gray-XL",
-      "product_id": "prod-6",
-      "color": "Gray",
-      "size": "XL",
-      "sku": "YCMC-HD-06-GR-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-6-Gray-XXL",
-      "product_id": "prod-6",
-      "color": "Gray",
-      "size": "XXL",
-      "sku": "YCMC-HD-06-GR-XXL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-7-Navy Blue-M",
-      "product_id": "prod-7",
-      "color": "Navy Blue",
-      "size": "M",
-      "sku": "YCMC-JKT-07-NA-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-7-Navy Blue-L",
-      "product_id": "prod-7",
-      "color": "Navy Blue",
-      "size": "L",
-      "sku": "YCMC-JKT-07-NA-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-7-Navy Blue-XL",
-      "product_id": "prod-7",
-      "color": "Navy Blue",
-      "size": "XL",
-      "sku": "YCMC-JKT-07-NA-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-8-White-S",
-      "product_id": "prod-8",
-      "color": "White",
-      "size": "S",
-      "sku": "YCMC-FRM-08-WH-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-8-White-M",
-      "product_id": "prod-8",
-      "color": "White",
-      "size": "M",
-      "sku": "YCMC-FRM-08-WH-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-8-White-L",
-      "product_id": "prod-8",
-      "color": "White",
-      "size": "L",
-      "sku": "YCMC-FRM-08-WH-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-8-White-XL",
-      "product_id": "prod-8",
-      "color": "White",
-      "size": "XL",
-      "sku": "YCMC-FRM-08-WH-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-9-White-S",
-      "product_id": "prod-9",
-      "color": "White",
-      "size": "S",
-      "sku": "YCMC-SNK-09-WH-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-9-White-M",
-      "product_id": "prod-9",
-      "color": "White",
-      "size": "M",
-      "sku": "YCMC-SNK-09-WH-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-9-White-L",
-      "product_id": "prod-9",
-      "color": "White",
-      "size": "L",
-      "sku": "YCMC-SNK-09-WH-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-9-White-XL",
-      "product_id": "prod-9",
-      "color": "White",
-      "size": "XL",
-      "sku": "YCMC-SNK-09-WH-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-Beige-XS",
-      "product_id": "prod-10",
-      "color": "Beige",
-      "size": "XS",
-      "sku": "YCMC-WTO-10-BE-XS",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-Beige-S",
-      "product_id": "prod-10",
-      "color": "Beige",
-      "size": "S",
-      "sku": "YCMC-WTO-10-BE-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-Beige-M",
-      "product_id": "prod-10",
-      "color": "Beige",
-      "size": "M",
-      "sku": "YCMC-WTO-10-BE-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-Beige-L",
-      "product_id": "prod-10",
-      "color": "Beige",
-      "size": "L",
-      "sku": "YCMC-WTO-10-BE-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-White-XS",
-      "product_id": "prod-10",
-      "color": "White",
-      "size": "XS",
-      "sku": "YCMC-WTO-10-WH-XS",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-White-S",
-      "product_id": "prod-10",
-      "color": "White",
-      "size": "S",
-      "sku": "YCMC-WTO-10-WH-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-White-M",
-      "product_id": "prod-10",
-      "color": "White",
-      "size": "M",
-      "sku": "YCMC-WTO-10-WH-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-10-White-L",
-      "product_id": "prod-10",
-      "color": "White",
-      "size": "L",
-      "sku": "YCMC-WTO-10-WH-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-11-Red-S",
-      "product_id": "prod-11",
-      "color": "Red",
-      "size": "S",
-      "sku": "YCMC-WDR-11-RE-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-11-Red-M",
-      "product_id": "prod-11",
-      "color": "Red",
-      "size": "M",
-      "sku": "YCMC-WDR-11-RE-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-11-Red-L",
-      "product_id": "prod-11",
-      "color": "Red",
-      "size": "L",
-      "sku": "YCMC-WDR-11-RE-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-12-Navy Blue-S",
-      "product_id": "prod-12",
-      "color": "Navy Blue",
-      "size": "S",
-      "sku": "YCMC-WKR-12-NA-S",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-12-Navy Blue-M",
-      "product_id": "prod-12",
-      "color": "Navy Blue",
-      "size": "M",
-      "sku": "YCMC-WKR-12-NA-M",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-12-Navy Blue-L",
-      "product_id": "prod-12",
-      "color": "Navy Blue",
-      "size": "L",
-      "sku": "YCMC-WKR-12-NA-L",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "var-prod-12-Navy Blue-XL",
-      "product_id": "prod-12",
-      "color": "Navy Blue",
-      "size": "XL",
-      "sku": "YCMC-WKR-12-NA-XL",
-      "stock": 15,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    }
-  ],
-  "cart_items": [
-    {
-      "id": "cart-1790007869623",
-      "user_id": "user-1790007844355",
-      "variant_id": "var-prod-8-White-L",
-      "quantity": 1,
-      "created_at": "2026-09-21T16:24:29.623Z"
-    }
-  ],
+  "products": [],
+  "product_images": [],
+  "product_variants": [],
+  "cart_items": [],
   "wishlist_items": [],
-  "orders": [
-    {
-      "id": "ord-1790605104109",
-      "order_number": "YC-16161",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 1299,
-      "discount": 0,
-      "delivery_fee": 0,
-      "cod_fee": 100,
-      "payment_method": "COD",
-      "coupon_code": "",
-      "grand_total": 1399,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-16161\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n💳 *Payment Method:* Cash on Delivery (COD)\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Classic Pique Cotton Slim Polo T-Shirt* (Allen Solly)\n   Size: M | Color: Olive | Qty: 1\n   Price: ₹1,299\n\n💵 *Order Bill Summary:*\nSubtotal: ₹1,299\nDelivery Fee: FREE\nCash on Delivery Extra Charge: ₹100\n*Grand Total: ₹1,399*\n\n📦 *COD Instruction:* Customer selected Cash on Delivery. Please collect ₹1,399 on delivery. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-28T14:18:24.109Z",
-      "updated_at": "2026-09-28T14:18:24.109Z"
-    },
-    {
-      "id": "ord-1790076353723",
-      "order_number": "YC-47790",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 2799,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2799,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-47790\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *511 Slim Fit Tapered Stretch Denim Jeans* (Levi's)\n   Size: L | Color: Charcoal | Qty: 1\n   Price: ₹2,799\n\n💵 *Order Summary:*\nSubtotal: ₹2,799\nDelivery Fee: FREE\n*Grand Total: ₹2,799*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=2799&cu=INR&tn=Order_YC47790\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,799 for Order #YC-47790. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-22T11:25:53.723Z",
-      "updated_at": "2026-09-22T11:25:53.723Z"
-    },
-    {
-      "id": "ord-1790070036734",
-      "order_number": "YC-38294",
-      "user_id": "user-1790007979059",
-      "customer_name": "prasoon",
-      "customer_phone": "8688332218",
-      "delivery_address": "prasoon, shivaji nagar, siddipet, Hyderabad, Telangana - 500034 (Ph: 8688332218)",
-      "subtotal": 2799,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2799,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-38294\n👤 *Customer Name:* prasoon\n📞 *Phone:* 8688332218\n📍 *Delivery Address:* shivaji nagar, siddipet, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *511 Slim Fit Tapered Stretch Denim Jeans* (Levi's)\n   Size: M | Color: Charcoal | Qty: 1\n   Price: ₹2,799\n\n💵 *Order Summary:*\nSubtotal: ₹2,799\nDelivery Fee: FREE\n*Grand Total: ₹2,799*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=2799&cu=INR&tn=Order_YC38294\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,799 for Order #YC-38294. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-22T09:40:36.734Z",
-      "updated_at": "2026-09-22T09:40:36.734Z"
-    },
-    {
-      "id": "ord-1790057240924",
-      "order_number": "YC-86721",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 2598,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2598,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-86721\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Classic Pique Cotton Slim Polo T-Shirt* (Allen Solly)\n   Size: L | Color: Olive | Qty: 2\n   Price: ₹2,598\n\n💵 *Order Summary:*\nSubtotal: ₹2,598\nDelivery Fee: FREE\n*Grand Total: ₹2,598*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=2598&cu=INR&tn=Order_YC86721\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,598 for Order #YC-86721. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-22T06:07:20.924Z",
-      "updated_at": "2026-09-22T06:07:20.924Z"
-    },
-    {
-      "id": "ord-1790008026926",
-      "order_number": "YC-24436",
-      "user_id": "user-1790007979059",
-      "customer_name": "prasoon",
-      "customer_phone": "8688332218",
-      "delivery_address": "prasoon, shivaji nagar, siddipet, Hyderabad, Telangana - 500034 (Ph: 8688332218)",
-      "subtotal": 2199,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2199,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-24436\n👤 *Customer Name:* prasoon\n📞 *Phone:* 8688332218\n📍 *Delivery Address:* shivaji nagar, siddipet, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Relaxed Tactical Multi-Pocket Cargo Pants* (Zara)\n   Size: XL | Color: Black | Qty: 1\n   Price: ₹2,199\n\n💵 *Order Summary:*\nSubtotal: ₹2,199\nDelivery Fee: FREE\n*Grand Total: ₹2,199*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=2199&cu=INR&tn=Order_YC24436\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,199 for Order #YC-24436. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T16:27:06.926Z",
-      "updated_at": "2026-09-21T16:27:06.926Z"
-    },
-    {
-      "id": "ord-1790007924647",
-      "order_number": "YC-36532",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 2799,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2799,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-36532\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *511 Slim Fit Tapered Stretch Denim Jeans* (Levi's)\n   Size: L | Color: Charcoal | Qty: 1\n   Price: ₹2,799\n\n💵 *Order Summary:*\nSubtotal: ₹2,799\nDelivery Fee: FREE\n*Grand Total: ₹2,799*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=2799&cu=INR&tn=Order_YC36532\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,799 for Order #YC-36532. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T16:25:24.647Z",
-      "updated_at": "2026-09-21T16:25:24.647Z"
-    },
-    {
-      "id": "ord-1790005544274",
-      "order_number": "YC-23739",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 1499,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 1499,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-23739\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Premium Oversized Heavyweight Cotton T-Shirt* (H&M)\n   Size: M | Color: Black | Qty: 1\n   Price: ₹1,499\n\n💵 *Order Summary:*\nSubtotal: ₹1,499\nDelivery Fee: FREE\n*Grand Total: ₹1,499*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=YouthChoiceMensWear&am=1499&cu=INR&tn=Order_YC23739\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹1,499 for Order #YC-23739. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T15:45:44.274Z",
-      "updated_at": "2026-09-21T15:45:44.274Z"
-    },
-    {
-      "id": "ord-1790003528995",
-      "order_number": "YC-32032",
-      "user_id": "user-admin-1",
-      "customer_name": "Youth Choice Admin",
-      "customer_phone": "+919032644552",
-      "delivery_address": "Youth Choice Admin, jhgfdsfgiop, Hyderabad, Telangana - 500034 (Ph: +919032644552)",
-      "subtotal": 2499,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2499,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-32032\n👤 *Customer Name:* Youth Choice Admin\n📞 *Phone:* +919032644552\n📍 *Delivery Address:* jhgfdsfgiop, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Casual Breathable Pure Linen Button-Down Shirt* (Louis Philippe)\n   Size: M | Color: White | Qty: 1\n   Price: ₹2,499\n\n💵 *Order Summary:*\nSubtotal: ₹2,499\nDelivery Fee: FREE\n*Grand Total: ₹2,499*\n\n💳 *UPI Payment Details:*\nUPI ID: 9032644552@ybl\nDirect Pay Link: upi://pay?pa=9032644552@ybl&pn=Youth%20Choice%20Mens%20Wear&am=2499&tn=Order%20YC-32032&cu=INR\n\n🤖 *AI BOT REQUEST:* Please reply with the Payment QR Code for ₹2,499 for Order #YC-32032. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T15:12:08.995Z",
-      "updated_at": "2026-09-21T15:12:08.995Z"
-    },
-    {
-      "id": "ord-1789998334119",
-      "order_number": "YC-23927",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 4998,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 4998,
-      "status": "ORDER_CONFIRMED",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-23927\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Casual Breathable Pure Linen Button-Down Shirt* (Louis Philippe)\n   Size: M | Color: White | Qty: 2\n   Price: ₹4,998\n\n💵 *Order Summary:*\nSubtotal: ₹4,998\nDelivery Fee: FREE\n*Grand Total: ₹4,998*\n\nPlease confirm my order and payment details. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T13:45:34.119Z",
-      "updated_at": "2026-09-21T13:53:22.656Z"
-    },
-    {
-      "id": "ord-1789998239601",
-      "order_number": "YC-63372",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 1499,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 1499,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-63372\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Premium Oversized Heavyweight Cotton T-Shirt* (H&M)\n   Size: L | Color: Black | Qty: 1\n   Price: ₹1,499\n\n💵 *Order Summary:*\nSubtotal: ₹1,499\nDelivery Fee: FREE\n*Grand Total: ₹1,499*\n\nPlease confirm my order and payment details. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T13:43:59.601Z",
-      "updated_at": "2026-09-21T13:43:59.601Z"
-    },
-    {
-      "id": "ord-1789997870329",
-      "order_number": "YC-77423",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 1499,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 1499,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-77423\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Premium Oversized Heavyweight Cotton T-Shirt* (H&M)\n   Size: M | Color: Black | Qty: 1\n   Price: ₹1,499\n\n💵 *Order Summary:*\nSubtotal: ₹1,499\nDelivery Fee: FREE\n*Grand Total: ₹1,499*\n\nPlease confirm my order and payment details. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T13:37:50.329Z",
-      "updated_at": "2026-09-21T13:37:50.329Z"
-    },
-    {
-      "id": "ord-1789995312576",
-      "order_number": "YC-99591",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "John Doe, Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034 (Ph: +919123456789)",
-      "subtotal": 2998,
-      "discount": 0,
-      "delivery_fee": 0,
-      "coupon_code": "",
-      "grand_total": 2998,
-      "status": "PENDING_CONFIRMATION",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\n\n📋 *Order ID:* YC-99591\n👤 *Customer Name:* John Doe\n📞 *Phone:* +919123456789\n📍 *Delivery Address:* Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034\n\n🛍️ *Order Items:*\n1. *Premium Oversized Heavyweight Cotton T-Shirt* (H&M)\n   Size: S | Color: Black | Qty: 1\n   Price: ₹1,499\n2. *Premium Oversized Heavyweight Cotton T-Shirt* (H&M)\n   Size: L | Color: Black | Qty: 1\n   Price: ₹1,499\n\n💵 *Order Summary:*\nSubtotal: ₹2,998\nDelivery Fee: FREE\n*Grand Total: ₹2,998*\n\nPlease confirm my order and payment details. Thank you!",
-      "notes": "",
-      "created_at": "2026-09-21T12:55:12.576Z",
-      "updated_at": "2026-09-21T12:55:12.576Z"
-    },
-    {
-      "id": "ord-demo-10245",
-      "order_number": "YC-10245",
-      "user_id": "user-customer-1",
-      "customer_name": "John Doe",
-      "customer_phone": "+919123456789",
-      "delivery_address": "Flat 402, Royal Residency, Road No. 3, Banjara Hills, Hyderabad, Telangana - 500034",
-      "subtotal": 2998,
-      "discount": 300,
-      "delivery_fee": 0,
-      "grand_total": 2698,
-      "status": "ORDER_CONFIRMED",
-      "whatsapp_message": "Hello Youth Choice Mens Wear!\nI would like to place an order.\nOrder ID: YC-10245...",
-      "created_at": "2026-09-21T12:42:13.910Z",
-      "updated_at": "2026-09-21T12:42:13.910Z"
-    }
-  ],
-  "order_items": [
-    {
-      "id": "orditem-1",
-      "order_id": "ord-demo-10245",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-S",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "L",
-      "quantity": 2,
-      "unit_price": 1499,
-      "total_price": 2998,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1789995312576-0",
-      "order_id": "ord-1789995312576",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-S",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "S",
-      "quantity": 1,
-      "unit_price": 1499,
-      "total_price": 1499,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1789995312576-1",
-      "order_id": "ord-1789995312576",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-L",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "L",
-      "quantity": 1,
-      "unit_price": 1499,
-      "total_price": 1499,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1789997870329-0",
-      "order_id": "ord-1789997870329",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-M",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "M",
-      "quantity": 1,
-      "unit_price": 1499,
-      "total_price": 1499,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1789998239601-0",
-      "order_id": "ord-1789998239601",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-L",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "L",
-      "quantity": 1,
-      "unit_price": 1499,
-      "total_price": 1499,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1789998334119-0",
-      "order_id": "ord-1789998334119",
-      "product_id": "prod-5",
-      "variant_id": "var-prod-5-White-M",
-      "product_name": "Casual Breathable Pure Linen Button-Down Shirt",
-      "brand_name": "Louis Philippe",
-      "color": "White",
-      "size": "M",
-      "quantity": 2,
-      "unit_price": 2499,
-      "total_price": 4998,
-      "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790003528995-0",
-      "order_id": "ord-1790003528995",
-      "product_id": "prod-5",
-      "variant_id": "var-prod-5-White-M",
-      "product_name": "Casual Breathable Pure Linen Button-Down Shirt",
-      "brand_name": "Louis Philippe",
-      "color": "White",
-      "size": "M",
-      "quantity": 1,
-      "unit_price": 2499,
-      "total_price": 2499,
-      "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790005544274-0",
-      "order_id": "ord-1790005544274",
-      "product_id": "prod-1",
-      "variant_id": "var-prod-1-Black-M",
-      "product_name": "Premium Oversized Heavyweight Cotton T-Shirt",
-      "brand_name": "H&M",
-      "color": "Black",
-      "size": "M",
-      "quantity": 1,
-      "unit_price": 1499,
-      "total_price": 1499,
-      "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790007924647-0",
-      "order_id": "ord-1790007924647",
-      "product_id": "prod-3",
-      "variant_id": "var-prod-3-Charcoal-L",
-      "product_name": "511 Slim Fit Tapered Stretch Denim Jeans",
-      "brand_name": "Levi's",
-      "color": "Charcoal",
-      "size": "L",
-      "quantity": 1,
-      "unit_price": 2799,
-      "total_price": 2799,
-      "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790008026926-0",
-      "order_id": "ord-1790008026926",
-      "product_id": "prod-4",
-      "variant_id": "var-prod-4-Black-XL",
-      "product_name": "Relaxed Tactical Multi-Pocket Cargo Pants",
-      "brand_name": "Zara",
-      "color": "Black",
-      "size": "XL",
-      "quantity": 1,
-      "unit_price": 2199,
-      "total_price": 2199,
-      "image_url": "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790057240924-0",
-      "order_id": "ord-1790057240924",
-      "product_id": "prod-2",
-      "variant_id": "var-prod-2-Olive-L",
-      "product_name": "Classic Pique Cotton Slim Polo T-Shirt",
-      "brand_name": "Allen Solly",
-      "color": "Olive",
-      "size": "L",
-      "quantity": 2,
-      "unit_price": 1299,
-      "total_price": 2598,
-      "image_url": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790070036734-0",
-      "order_id": "ord-1790070036734",
-      "product_id": "prod-3",
-      "variant_id": "var-prod-3-Charcoal-M",
-      "product_name": "511 Slim Fit Tapered Stretch Denim Jeans",
-      "brand_name": "Levi's",
-      "color": "Charcoal",
-      "size": "M",
-      "quantity": 1,
-      "unit_price": 2799,
-      "total_price": 2799,
-      "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790076353723-0",
-      "order_id": "ord-1790076353723",
-      "product_id": "prod-3",
-      "variant_id": "var-prod-3-Charcoal-L",
-      "product_name": "511 Slim Fit Tapered Stretch Denim Jeans",
-      "brand_name": "Levi's",
-      "color": "Charcoal",
-      "size": "L",
-      "quantity": 1,
-      "unit_price": 2799,
-      "total_price": 2799,
-      "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "item-ord-1790605104109-0",
-      "order_id": "ord-1790605104109",
-      "product_id": "prod-2",
-      "variant_id": "var-prod-2-Olive-M",
-      "product_name": "Classic Pique Cotton Slim Polo T-Shirt",
-      "brand_name": "Allen Solly",
-      "color": "Olive",
-      "size": "M",
-      "quantity": 1,
-      "unit_price": 1299,
-      "total_price": 1299,
-      "image_url": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800&auto=format&fit=crop&q=80"
-    }
-  ],
-  "reviews": [
-    {
-      "id": "rev-prod-1",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-2",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-3",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-4",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-5",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-6",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-7",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-8",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-9",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-10",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-11",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "rev-prod-12",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "user_name": "John Doe",
-      "rating": 4,
-      "comment": "Outstanding build quality and fit! Really loved ordering via WhatsApp.",
-      "is_verified": true,
-      "created_at": "2026-09-21T12:42:13.910Z"
-    }
-  ],
+  "orders": [],
+  "order_items": [],
+  "reviews": [],
   "coupons": [
     {
       "id": "cpn-1",
@@ -1898,6 +383,8 @@
       "discount_type": "FIXED",
       "discount_value": 100,
       "min_order_amount": 999,
+      "start_at": "2026-09-01T00:00:00.000+05:30",
+      "end_at": "2026-12-31T23:59:59.000+05:30",
       "status": "ACTIVE",
       "usage_count": 14,
       "created_at": "2026-09-21T12:42:13.910Z"
@@ -1908,6 +395,8 @@
       "discount_type": "PERCENT",
       "discount_value": 20,
       "min_order_amount": 1999,
+      "start_at": "2026-09-01T00:00:00.000+05:30",
+      "end_at": "2026-12-31T23:59:59.000+05:30",
       "status": "ACTIVE",
       "usage_count": 38,
       "created_at": "2026-09-21T12:42:13.910Z"
@@ -1922,7 +411,34 @@
       "discount_tag": "UP TO 50% OFF",
       "link_url": "/products",
       "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
+      "created_at": "2026-09-21T12:42:13.910Z",
+      "name": "NEW SEASON SALE",
+      "start_at": "2026-09-01T00:00:00.000+05:30",
+      "end_at": "2026-12-31T23:59:59.000+05:30",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-item-1791181122781-prod-3",
+          "offer_id": "off-1",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-item-1791181122781-prod-4",
+          "offer_id": "off-1",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-item-1791181122781-prod-5",
+          "offer_id": "off-1",
+          "product_id": "prod-5",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ]
     },
     {
       "id": "off-2",
@@ -1932,7 +448,279 @@
       "discount_tag": "FLAT ₹500 OFF",
       "link_url": "/men",
       "status": "ACTIVE",
-      "created_at": "2026-09-21T12:42:13.910Z"
+      "created_at": "2026-09-21T12:42:13.910Z",
+      "name": "WEEKEND DEALS",
+      "start_at": "2026-09-01T00:00:00.000+05:30",
+      "end_at": "2026-12-31T23:59:59.000+05:30",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-item-1791181122781-prod-3",
+          "offer_id": "off-2",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-item-1791181122781-prod-4",
+          "offer_id": "off-2",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-item-1791181122781-prod-5",
+          "offer_id": "off-2",
+          "product_id": "prod-5",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ]
+    },
+    {
+      "id": "off-1791181872052",
+      "name": "dusshera",
+      "title": "dusshera",
+      "subtitle": "",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": false,
+      "start_at": "2026-10-05T06:30:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181872053-i99j",
+          "offer_id": "off-1791181872052",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181872053-lb8b",
+          "offer_id": "off-1791181872052",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:31:12.053Z"
+    },
+    {
+      "id": "off-1791181874341",
+      "name": "dusshera",
+      "title": "dusshera",
+      "subtitle": "",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": false,
+      "start_at": "2026-10-05T06:30:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181874341-zgkz",
+          "offer_id": "off-1791181874341",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181874341-njck",
+          "offer_id": "off-1791181874341",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:31:14.342Z"
+    },
+    {
+      "id": "off-1791181877760",
+      "name": "dusshera",
+      "title": "dusshera",
+      "subtitle": "",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": false,
+      "start_at": "2026-10-05T06:30:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181877760-nmt9",
+          "offer_id": "off-1791181877760",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181877760-h122",
+          "offer_id": "off-1791181877760",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:31:17.760Z"
+    },
+    {
+      "id": "off-1791181892714",
+      "name": "dusshera",
+      "title": "dusshera",
+      "subtitle": "",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": false,
+      "start_at": "2026-10-05T06:30:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181892714-vxbo",
+          "offer_id": "off-1791181892714",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181892714-7oji",
+          "offer_id": "off-1791181892714",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:31:32.714Z"
+    },
+    {
+      "id": "off-1791181971722",
+      "name": "duushera",
+      "title": "duushera",
+      "subtitle": "special discounts on wmonen's wear",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": true,
+      "start_at": "2026-10-05T06:32:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181971722-r4f4",
+          "offer_id": "off-1791181971722",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181971722-44nv",
+          "offer_id": "off-1791181971722",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:32:51.722Z"
+    },
+    {
+      "id": "off-1791181973110",
+      "name": "duushera",
+      "title": "duushera",
+      "subtitle": "special discounts on wmonen's wear",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": true,
+      "start_at": "2026-10-05T06:32:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181973110-6hjs",
+          "offer_id": "off-1791181973110",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181973110-izc8",
+          "offer_id": "off-1791181973110",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:32:53.111Z"
+    },
+    {
+      "id": "off-1791181981208",
+      "name": "duushera",
+      "title": "duushera",
+      "subtitle": "special discounts on wmonen's wear",
+      "banner_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&auto=format&fit=crop&q=80",
+      "discount_tag": "SPECIAL OFFER",
+      "link_url": "/products",
+      "allow_coupon_with_offer": true,
+      "start_at": "2026-10-05T06:32:00.000Z",
+      "end_at": "2026-10-12T18:29:00.000Z",
+      "is_active": true,
+      "items": [
+        {
+          "id": "off-itm-1791181981208-th5e",
+          "offer_id": "off-1791181981208",
+          "product_id": "prod-3",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181981208-bpnt",
+          "offer_id": "off-1791181981208",
+          "product_id": "prod-4",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181981208-yz6x",
+          "offer_id": "off-1791181981208",
+          "product_id": "prod-5",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        },
+        {
+          "id": "off-itm-1791181981208-tira",
+          "offer_id": "off-1791181981208",
+          "product_id": "prod-11",
+          "discount_type": "PERCENT",
+          "discount_value": 20
+        }
+      ],
+      "views_count": 0,
+      "orders_count": 0,
+      "total_revenue": 0,
+      "created_at": "2026-10-05T06:33:01.208Z"
     }
   ],
   "notifications": [
@@ -1946,1094 +734,5 @@
       "created_at": "2026-09-21T13:53:22.656Z"
     }
   ],
-  "analytics_events": [
-    {
-      "id": "evt-0",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-1",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-2",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-3",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-4",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-5",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "category_id": "cat-men-hoodies",
-      "brand_id": "brand-nike",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-6",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "category_id": "cat-men-jackets",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-7",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-8",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "category_id": "cat-men-footwear",
-      "brand_id": "brand-puma",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-9",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "category_id": "cat-women-tops",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-10",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "category_id": "cat-women-dresses",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-11",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-12",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-13",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-14",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-15",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-16",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-17",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "category_id": "cat-men-hoodies",
-      "brand_id": "brand-nike",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-18",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "category_id": "cat-men-jackets",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-19",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-20",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "category_id": "cat-men-footwear",
-      "brand_id": "brand-puma",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-21",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "category_id": "cat-women-tops",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-22",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "category_id": "cat-women-dresses",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-23",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-24",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-25",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-26",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-27",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-28",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-29",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "category_id": "cat-men-hoodies",
-      "brand_id": "brand-nike",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-30",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "category_id": "cat-men-jackets",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-31",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-32",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "category_id": "cat-men-footwear",
-      "brand_id": "brand-puma",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-33",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "category_id": "cat-women-tops",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-34",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "category_id": "cat-women-dresses",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-35",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-36",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-37",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-38",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-39",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-40",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-41",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "category_id": "cat-men-hoodies",
-      "brand_id": "brand-nike",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-42",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "category_id": "cat-men-jackets",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-43",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-44",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "category_id": "cat-men-footwear",
-      "brand_id": "brand-puma",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-45",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "category_id": "cat-women-tops",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-46",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "category_id": "cat-women-dresses",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-47",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-48",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-49",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-50",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-51",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-52",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-53",
-      "event_type": "CHECKOUT_STARTED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-6",
-      "category_id": "cat-men-hoodies",
-      "brand_id": "brand-nike",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-54",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "product_id": "prod-7",
-      "category_id": "cat-men-jackets",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-55",
-      "event_type": "ORDER_CONFIRMED",
-      "user_id": "user-customer-1",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-56",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-9",
-      "category_id": "cat-men-footwear",
-      "brand_id": "brand-puma",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-57",
-      "event_type": "PRODUCT_VIEW",
-      "user_id": "user-customer-1",
-      "product_id": "prod-10",
-      "category_id": "cat-women-tops",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-58",
-      "event_type": "SEARCH",
-      "user_id": "user-customer-1",
-      "product_id": "prod-11",
-      "category_id": "cat-women-dresses",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-59",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-21T12:42:13.910Z"
-    },
-    {
-      "id": "evt-1789994822177",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:47:02.177Z"
-    },
-    {
-      "id": "evt-1789994822205",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T12:47:02.205Z"
-    },
-    {
-      "id": "evt-1789995148577",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:52:28.577Z"
-    },
-    {
-      "id": "evt-1789995148594",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T12:52:28.594Z"
-    },
-    {
-      "id": "evt-1789995262979",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "created_at": "2026-09-21T12:54:22.979Z"
-    },
-    {
-      "id": "evt-1789995312655",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-99591\",\"grand_total\":2998}",
-      "created_at": "2026-09-21T12:55:12.576Z"
-    },
-    {
-      "id": "evt-1789996557466",
-      "event_type": "WISHLIST_ADD",
-      "user_id": "user-admin-1",
-      "product_id": "prod-5",
-      "created_at": "2026-09-21T13:15:57.466Z"
-    },
-    {
-      "id": "evt-1789996560474",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T13:16:00.474Z"
-    },
-    {
-      "id": "evt-1789996560498",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T13:16:00.498Z"
-    },
-    {
-      "id": "evt-1789996567995",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-admin-1",
-      "product_id": "prod-5",
-      "created_at": "2026-09-21T13:16:07.995Z"
-    },
-    {
-      "id": "evt-1789997856591",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T13:37:36.591Z"
-    },
-    {
-      "id": "evt-1789997856622",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T13:37:36.622Z"
-    },
-    {
-      "id": "evt-1789997860609",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "created_at": "2026-09-21T13:37:40.609Z"
-    },
-    {
-      "id": "evt-1789997870330",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-77423\",\"grand_total\":1499}",
-      "created_at": "2026-09-21T13:37:50.329Z"
-    },
-    {
-      "id": "evt-1789998239585",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "created_at": "2026-09-21T13:43:59.585Z"
-    },
-    {
-      "id": "evt-1789998239619",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-63372\",\"grand_total\":1499}",
-      "created_at": "2026-09-21T13:43:59.601Z"
-    },
-    {
-      "id": "evt-1789998319644",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T13:45:19.644Z"
-    },
-    {
-      "id": "evt-1789998319668",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-5",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-lp",
-      "created_at": "2026-09-21T13:45:19.668Z"
-    },
-    {
-      "id": "evt-1789998323043",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "created_at": "2026-09-21T13:45:23.043Z"
-    },
-    {
-      "id": "evt-1789998327252",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-5",
-      "created_at": "2026-09-21T13:45:27.252Z"
-    },
-    {
-      "id": "evt-1789998334119",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-23927\",\"grand_total\":4998}",
-      "created_at": "2026-09-21T13:45:34.119Z"
-    },
-    {
-      "id": "evt-1790003529024",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-admin-1",
-      "metadata": "{\"order_number\":\"YC-32032\",\"grand_total\":2499}",
-      "created_at": "2026-09-21T15:12:08.995Z"
-    },
-    {
-      "id": "evt-1790004359615",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:25:59.615Z"
-    },
-    {
-      "id": "evt-1790004359629",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:25:59.629Z"
-    },
-    {
-      "id": "evt-1790004833333",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:33:53.333Z"
-    },
-    {
-      "id": "evt-1790004833345",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:33:53.345Z"
-    },
-    {
-      "id": "evt-1790005022440",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:37:02.440Z"
-    },
-    {
-      "id": "evt-1790005022481",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:37:02.481Z"
-    },
-    {
-      "id": "evt-1790005124224",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:38:44.224Z"
-    },
-    {
-      "id": "evt-1790005124233",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:38:44.233Z"
-    },
-    {
-      "id": "evt-1790005528847",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:45:28.847Z"
-    },
-    {
-      "id": "evt-1790005528882",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-1",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-hm",
-      "created_at": "2026-09-21T15:45:28.882Z"
-    },
-    {
-      "id": "evt-1790005533043",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-1",
-      "created_at": "2026-09-21T15:45:33.043Z"
-    },
-    {
-      "id": "evt-1790005544321",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-23739\",\"grand_total\":1499}",
-      "created_at": "2026-09-21T15:45:44.274Z"
-    },
-    {
-      "id": "evt-1790007864549",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T16:24:24.549Z"
-    },
-    {
-      "id": "evt-1790007864576",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-8",
-      "category_id": "cat-men-shirts",
-      "brand_id": "brand-van-heusen",
-      "created_at": "2026-09-21T16:24:24.576Z"
-    },
-    {
-      "id": "evt-1790007869623",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-1790007844355",
-      "product_id": "prod-8",
-      "created_at": "2026-09-21T16:24:29.623Z"
-    },
-    {
-      "id": "evt-1790007913403",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T16:25:13.403Z"
-    },
-    {
-      "id": "evt-1790007913439",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-21T16:25:13.439Z"
-    },
-    {
-      "id": "evt-1790007918094",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "created_at": "2026-09-21T16:25:18.094Z"
-    },
-    {
-      "id": "evt-1790007924690",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-36532\",\"grand_total\":2799}",
-      "created_at": "2026-09-21T16:25:24.647Z"
-    },
-    {
-      "id": "evt-1790007994071",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T16:26:34.071Z"
-    },
-    {
-      "id": "evt-1790007994108",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-4",
-      "category_id": "cat-men-cargo",
-      "brand_id": "brand-zara",
-      "created_at": "2026-09-21T16:26:34.108Z"
-    },
-    {
-      "id": "evt-1790008000218",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-1790007979059",
-      "product_id": "prod-4",
-      "created_at": "2026-09-21T16:26:40.218Z"
-    },
-    {
-      "id": "evt-1790008026927",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-1790007979059",
-      "metadata": "{\"order_number\":\"YC-24436\",\"grand_total\":2199}",
-      "created_at": "2026-09-21T16:27:06.926Z"
-    },
-    {
-      "id": "evt-1790057190692",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T06:06:30.692Z"
-    },
-    {
-      "id": "evt-1790057190705",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T06:06:30.705Z"
-    },
-    {
-      "id": "evt-1790057225268",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-22T06:07:05.268Z"
-    },
-    {
-      "id": "evt-1790057225279",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-22T06:07:05.279Z"
-    },
-    {
-      "id": "evt-1790057230665",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "created_at": "2026-09-22T06:07:10.665Z"
-    },
-    {
-      "id": "evt-1790057232883",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "created_at": "2026-09-22T06:07:12.883Z"
-    },
-    {
-      "id": "evt-1790057240975",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-86721\",\"grand_total\":2598}",
-      "created_at": "2026-09-22T06:07:20.924Z"
-    },
-    {
-      "id": "evt-1790070015102",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-22T09:40:15.102Z"
-    },
-    {
-      "id": "evt-1790070015226",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-22T09:40:15.226Z"
-    },
-    {
-      "id": "evt-1790070025959",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T09:40:25.959Z"
-    },
-    {
-      "id": "evt-1790070025962",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T09:40:25.962Z"
-    },
-    {
-      "id": "evt-1790070028869",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-1790007979059",
-      "product_id": "prod-3",
-      "created_at": "2026-09-22T09:40:28.869Z"
-    },
-    {
-      "id": "evt-1790070036797",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-1790007979059",
-      "metadata": "{\"order_number\":\"YC-38294\",\"grand_total\":2799}",
-      "created_at": "2026-09-22T09:40:36.734Z"
-    },
-    {
-      "id": "evt-1790070459834",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-22T09:47:39.834Z"
-    },
-    {
-      "id": "evt-1790070459866",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-22T09:47:39.866Z"
-    },
-    {
-      "id": "evt-1790076323954",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-22T11:25:23.954Z"
-    },
-    {
-      "id": "evt-1790076323965",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-12",
-      "category_id": "cat-women-kurtis",
-      "brand_id": "brand-peter-england",
-      "created_at": "2026-09-22T11:25:23.965Z"
-    },
-    {
-      "id": "evt-1790076333083",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T11:25:33.083Z"
-    },
-    {
-      "id": "evt-1790076333092",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T11:25:33.092Z"
-    },
-    {
-      "id": "evt-1790076346171",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-3",
-      "created_at": "2026-09-22T11:25:46.171Z"
-    },
-    {
-      "id": "evt-1790076353764",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-47790\",\"grand_total\":2799}",
-      "created_at": "2026-09-22T11:25:53.723Z"
-    },
-    {
-      "id": "evt-1790076607503",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T11:30:07.503Z"
-    },
-    {
-      "id": "evt-1790076607513",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-3",
-      "category_id": "cat-men-jeans",
-      "brand_id": "brand-levis",
-      "created_at": "2026-09-22T11:30:07.513Z"
-    },
-    {
-      "id": "evt-1790605079765",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-28T14:17:59.765Z"
-    },
-    {
-      "id": "evt-1790605079774",
-      "event_type": "PRODUCT_VIEW",
-      "product_id": "prod-2",
-      "category_id": "cat-men-tshirts",
-      "brand_id": "brand-allen-solly",
-      "created_at": "2026-09-28T14:17:59.774Z"
-    },
-    {
-      "id": "evt-1790605082526",
-      "event_type": "ADD_TO_CART",
-      "user_id": "user-customer-1",
-      "product_id": "prod-2",
-      "created_at": "2026-09-28T14:18:02.526Z"
-    },
-    {
-      "id": "evt-1790605104148",
-      "event_type": "WHATSAPP_ORDER",
-      "user_id": "user-customer-1",
-      "metadata": "{\"order_number\":\"YC-16161\",\"grand_total\":1399}",
-      "created_at": "2026-09-28T14:18:24.109Z"
-    }
-  ]
+  "analytics_events": []
 }

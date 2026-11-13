@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
         <div>
           <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block">EXECUTIVE SUMMARY</span>
-          <h1 className="text-2xl font-display font-extrabold text-white uppercase">Youth Choice Store Dashboard</h1>
+          <h1 className="text-2xl font-display font-extrabold text-white uppercase">Youth Choice The Fashion Store Dashboard</h1>
         </div>
 
         {/* Quick Actions Toolbar */}

@@ -20,7 +20,7 @@ export const CheckoutPage: React.FC = () => {
   const [notes, setNotes] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<any>(null);
-  const [selectedUpiHandle, setSelectedUpiHandle] = useState<string>('9032644552@ybl');
+  const [selectedUpiHandle, setSelectedUpiHandle] = useState<string>('8522000504@ybl');
 
   // New Address form
   const [showNewAddr, setShowNewAddr] = useState<boolean>(false);
@@ -71,12 +71,27 @@ export const CheckoutPage: React.FC = () => {
 
     try {
       const res = await apiRequest('/admin/coupons');
-      const found = (res.coupons || []).find((c: any) => c.code.toUpperCase() === couponCode.toUpperCase() && c.status === 'ACTIVE');
+      const found = (res.coupons || []).find((c: any) => c.code.toUpperCase() === couponCode.trim().toUpperCase());
       if (!found) {
-        setCouponError('Invalid or expired coupon code');
+        setCouponError('Invalid coupon code');
         return;
       }
 
+      const nowMs = Date.now();
+
+      // 1. Check if before start time
+      if (found.start_at && nowMs < new Date(found.start_at).getTime()) {
+        setCouponError('This coupon is not active yet.');
+        return;
+      }
+
+      // 2. Check if after end time or status expired
+      if ((found.end_at && nowMs > new Date(found.end_at).getTime()) || found.status === 'EXPIRED') {
+        setCouponError('This coupon has expired.');
+        return;
+      }
+
+      // 3. Check minimum order requirement
       if (summary.subtotal < found.min_order_amount) {
         setCouponError(`Minimum order amount for coupon ${found.code} is ₹${found.min_order_amount}`);
         return;
@@ -137,7 +152,7 @@ export const CheckoutPage: React.FC = () => {
       <div className="max-w-md mx-auto my-20 text-center space-y-4">
         <h2 className="text-xl font-bold text-white">Your cart is empty</h2>
         <button onClick={() => navigate('/products')} className="bg-amber-500 text-black font-bold text-xs px-6 py-3 rounded-xl uppercase">
-          Shop Mens Wear
+          Shop Now
         </button>
       </div>
     );
@@ -163,7 +178,7 @@ export const CheckoutPage: React.FC = () => {
             <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">ORDER CREATED SUCCESSFULLY</span>
             <h2 className="text-2xl font-display font-bold text-white uppercase">Order ID: {orderSuccess.order.order_number}</h2>
             <p className="text-xs text-slate-300">
-              Your order has been recorded in our system. Click the button below to send your order details directly to the Youth Choice Mens Wear store owner via WhatsApp!
+              Your order has been recorded in our system. Click the button below to send your order details directly to the Youth Choice The Fashion Store owner via WhatsApp!
             </p>
           </div>
 
@@ -178,9 +193,9 @@ export const CheckoutPage: React.FC = () => {
               <span className="text-xs text-slate-400 block font-semibold">Select Store UPI Handle:</span>
               <div className="flex flex-wrap justify-center gap-2">
                 {[
-                  { handle: '9032644552@ybl', label: '9032644552@ybl (PhonePe / Yes Bank)' },
-                  { handle: '9032644552@paytm', label: '9032644552@paytm (Paytm)' },
-                  { handle: '9032644552@okicici', label: '9032644552@okicici (GPay / ICICI)' }
+                  { handle: '8522000504@ybl', label: '8522000504@ybl (PhonePe / Yes Bank)' },
+                  { handle: '8522000504@paytm', label: '8522000504@paytm (Paytm)' },
+                  { handle: '8522000504@okicici', label: '8522000504@okicici (GPay / ICICI)' }
                 ].map((item) => (
                   <button
                     key={item.handle}

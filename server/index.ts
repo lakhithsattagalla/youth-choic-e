@@ -29,31 +29,42 @@ app.use(express.json());
 db.init();
 
 // Create master API Router to handle requests both with /api prefix and stripped /api prefix (Vercel serverless)
-const apiRouter = express.Router();
+app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/api/brands', brandRoutes);
+app.use('/brands', brandRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/cart', cartRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/wishlist', wishlistRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/orders', orderRoutes);
+app.use('/api/whatsapp', whatsappBotRoutes);
+app.use('/whatsapp', whatsappBotRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/ai', aiRoutes);
+app.use('/api/user', userRoutes);
+app.use('/user', userRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/analytics', analyticsRoutes);
 
-apiRouter.use('/auth', authRoutes);
-apiRouter.use('/products', productRoutes);
-apiRouter.use('/categories', categoryRoutes);
-apiRouter.use('/brands', brandRoutes);
-apiRouter.use('/cart', cartRoutes);
-apiRouter.use('/wishlist', wishlistRoutes);
-apiRouter.use('/orders', orderRoutes);
-apiRouter.use('/whatsapp', whatsappBotRoutes);
-apiRouter.use('/ai', aiRoutes);
-apiRouter.use('/user', userRoutes);
-apiRouter.use('/admin', adminRoutes);
-apiRouter.use('/analytics', analyticsRoutes);
+const apiRouter = express.Router();
 
 apiRouter.get('/health', (req, res) => {
   res.json({
     status: 'OK',
-    store: 'Youth Choice Mens Wear',
+    store: 'Youth Choice The Fashion Store',
     tagline: 'Define Your Style. Wear Your Confidence.',
     timestamp: new Date().toISOString()
   });
 });
 
-// Mount router for both /api/xxx and /xxx routes
 app.use('/api', apiRouter);
 app.use('/', apiRouter);
 
@@ -68,10 +79,35 @@ if (fs.existsSync(distPath)) {
   });
 }
 
+// 404 Handler for unmatched API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'API endpoint not found'
+  });
+});
+
+// Global Express Error Handler
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('[Express Global Error]:', err);
+  if (!res.headersSent) {
+    const statusCode = err.status || err.statusCode || 500;
+    const clientMessage = statusCode >= 500
+      ? 'Something went wrong. Please try again later.'
+      : (err.message || 'Invalid request');
+
+    res.status(statusCode).json({
+      success: false,
+      error: clientMessage,
+      message: clientMessage
+    });
+  }
+});
+
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`====================================================`);
-    console.log(`🚀 Youth Choice Mens Wear Server running on port ${PORT}`);
+    console.log(`🚀 Youth Choice The Fashion Store Server running on port ${PORT}`);
     console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
     console.log(`====================================================`);
   });

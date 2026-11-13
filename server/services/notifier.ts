@@ -34,7 +34,7 @@ function maskPhone(phone: string): string {
  * 1. Email OTP Dispatcher (Supports Nodemailer SMTP or Resend REST API)
  */
 async function sendEmailOtp(email: string, otp: string): Promise<{ success: boolean; error?: string }> {
-  const storeName = process.env.STORE_NAME || "Youth Choice Mens Wear";
+  const storeName = process.env.STORE_NAME || "Youth Choice The Fashion Store";
   const fromAddress = process.env.SMTP_FROM || process.env.EMAIL_FROM_ADDRESS || process.env.SMTP_USER || 'no-reply@youthchoice.com';
 
   const resendApiKey = process.env.RESEND_API_KEY || process.env.EMAIL_PROVIDER_API_KEY;
@@ -149,7 +149,7 @@ async function sendSmsOtp(phone: string, otp: string): Promise<{ success: boolea
     return { success: false, error: 'No mobile phone number provided.' };
   }
 
-  const smsMessage = `Youth Choice Mens Wear: Your verification code is ${otp}. Valid for 5 minutes. Do not share this code.`;
+  const smsMessage = `Youth Choice The Fashion Store: Your verification code is ${otp}. Valid for 5 minutes. Do not share this code.`;
   const maskedP = maskPhone(cleanPhone);
 
   const smsApiKey = process.env.SMS_PROVIDER_API_KEY;

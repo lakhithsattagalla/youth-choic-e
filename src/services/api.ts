@@ -5,7 +5,7 @@ const getApiBaseUrl = () => {
   }
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    // On any local dev port (localhost / 127.0.0.1), always target backend port 5000
+    // On any local dev port (localhost / 127.0.0.1), target backend port 5000
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return 'http://localhost:5000/api';
     }
@@ -30,15 +30,38 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
 
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
 
-  const response = await fetch(url, {
-    ...options,
-    headers
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers
+    });
+  } catch (networkError: any) {
+    console.error('[API Client Network Error]:', networkError);
+    throw new Error('Unable to connect to the server. Please check your connection and try again.');
+  }
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const errorMsg = data.error || data.message || data.details || "We couldn't send the OTP right now. Please try again later.";
+    let errorMsg = data.error || data.message || data.details;
+
+    if (!errorMsg) {
+      if (response.status === 404) {
+        errorMsg = "Sorry, we couldn't find what you're looking for.";
+      } else if (response.status === 401) {
+        errorMsg = 'Session expired or unauthorized. Please log in again.';
+      } else if (response.status === 403) {
+        errorMsg = 'Access denied. You do not have permission for this action.';
+      } else if (response.status === 429) {
+        errorMsg = 'Too many requests. Please wait a moment and try again.';
+      } else if (response.status >= 500) {
+        errorMsg = 'Something went wrong. Please try again later.';
+      } else {
+        errorMsg = 'Request failed. Please try again later.';
+      }
+    }
+
     throw new Error(errorMsg);
   }
 

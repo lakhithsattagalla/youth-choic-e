@@ -6,7 +6,7 @@ export const FloatingCallButton: React.FC = () => {
     <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col space-y-3">
       {/* WhatsApp Quick Chat Floating Button */}
       <a
-        href="https://wa.me/919032644552?text=Hello%20Youth%20Choice%20Mens%20Wear!%20I%20have%20an%20inquiry."
+        href="https://wa.me/918522000504?text=Hello%20Youth%20Choice%20Mens%20Wear!%20I%20have%20an%20inquiry."
         target="_blank"
         rel="noreferrer"
         className="group bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold p-3.5 sm:px-4 sm:py-3 rounded-full shadow-2xl shadow-emerald-500/30 flex items-center space-x-2 transition-all hover:scale-110 active:scale-95 border border-emerald-300/40"

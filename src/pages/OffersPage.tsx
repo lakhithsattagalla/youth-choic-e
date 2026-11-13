@@ -49,18 +49,22 @@ export const OffersPage: React.FC = () => {
           <span>Active Coupon Codes</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {coupons.map(cpn => (
-            <div key={cpn.id} className="bg-neutral-900 border border-dashed border-amber-500/40 p-5 rounded-2xl space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="font-mono font-extrabold text-base text-amber-400 tracking-wider">{cpn.code}</span>
-                <span className="bg-amber-500/10 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold uppercase">{cpn.discount_type}</span>
+          {coupons.filter(c => c.status === 'ACTIVE').length === 0 ? (
+            <p className="text-xs text-slate-500 italic col-span-full">No active promo codes right now. Check back soon!</p>
+          ) : (
+            coupons.filter(c => c.status === 'ACTIVE').map(cpn => (
+              <div key={cpn.id} className="bg-neutral-900 border border-dashed border-amber-500/40 p-5 rounded-2xl space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-mono font-extrabold text-base text-amber-400 tracking-wider">{cpn.code}</span>
+                  <span className="bg-amber-500/10 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold uppercase">{cpn.discount_type}</span>
+                </div>
+                <p className="text-xs text-white font-bold">
+                  {cpn.discount_type === 'FIXED' ? `Flat ₹${cpn.discount_value} OFF` : `${cpn.discount_value}% OFF`}
+                </p>
+                <p className="text-[11px] text-slate-400">Min. Order Value: ₹{cpn.min_order_amount}</p>
               </div>
-              <p className="text-xs text-white font-bold">
-                {cpn.discount_type === 'FIXED' ? `Flat ₹${cpn.discount_value} OFF` : `${cpn.discount_value}% OFF`}
-              </p>
-              <p className="text-[11px] text-slate-400">Min. Order Value: ₹{cpn.min_order_amount}</p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
