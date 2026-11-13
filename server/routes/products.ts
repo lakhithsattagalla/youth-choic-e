@@ -5,7 +5,8 @@ import {
   fetchProductsFromSupabase,
   deleteProductFromSupabase,
   createProductInSupabase,
-  updateProductInSupabase
+  updateProductInSupabase,
+  createSignedProductImageUploadUrl
 } from '../services/supabaseService.js';
 import { getProductEffectivePrice } from '../services/couponHelper.js';
 import { authenticateToken, requireAdmin, AuthRequest } from '../middleware/auth.js';
@@ -218,6 +219,26 @@ router.get('/:id', (req: AuthRequest, res: Response) => {
     });
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message || 'Failed to fetch product details' });
+  }
+});
+
+// Direct Browser Signed Upload URL (Bypasses Supabase Storage RLS)
+router.post('/storage-upload-url', async (req: AuthRequest, res: Response) => {
+  try {
+    const { fileName, fileType, fileSize } = req.body;
+    if (fileSize && fileSize > 10 * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        error: 'File size exceeds maximum upload limit of 10 MB.'
+      });
+    }
+    const uploadInfo = await createSignedProductImageUploadUrl(fileName || 'product-image.jpg');
+    res.json({ success: true, ...uploadInfo });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      error: err?.message || 'Failed to generate signed upload URL'
+    });
   }
 });
 

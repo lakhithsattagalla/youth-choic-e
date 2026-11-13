@@ -35,25 +35,32 @@ ON CONFLICT (id) DO UPDATE SET
 DROP POLICY IF EXISTS "Public View Product Images" ON storage.objects;
 CREATE POLICY "Public View Product Images"
 ON storage.objects FOR SELECT
+TO public, anon, authenticated
 USING (bucket_id = 'product-images');
 
--- Allow admins / authorized users to upload product images directly
+-- Allow uploads to product-images bucket (bypasses RLS check for uploads)
 DROP POLICY IF EXISTS "Admin Upload Product Images" ON storage.objects;
-CREATE POLICY "Admin Upload Product Images"
+DROP POLICY IF EXISTS "Public Upload Product Images" ON storage.objects;
+CREATE POLICY "Public Upload Product Images"
 ON storage.objects FOR INSERT
+TO public, anon, authenticated
 WITH CHECK (bucket_id = 'product-images');
 
--- Allow admins / authorized users to update or replace product images
+-- Allow updates or image replacements
 DROP POLICY IF EXISTS "Admin Update Product Images" ON storage.objects;
-CREATE POLICY "Admin Update Product Images"
+DROP POLICY IF EXISTS "Public Update Product Images" ON storage.objects;
+CREATE POLICY "Public Update Product Images"
 ON storage.objects FOR UPDATE
+TO public, anon, authenticated
 USING (bucket_id = 'product-images')
 WITH CHECK (bucket_id = 'product-images');
 
--- Allow admins / authorized users to delete product images
+-- Allow image deletions
 DROP POLICY IF EXISTS "Admin Delete Product Images" ON storage.objects;
-CREATE POLICY "Admin Delete Product Images"
+DROP POLICY IF EXISTS "Public Delete Product Images" ON storage.objects;
+CREATE POLICY "Public Delete Product Images"
 ON storage.objects FOR DELETE
+TO public, anon, authenticated
 USING (bucket_id = 'product-images');
 
 

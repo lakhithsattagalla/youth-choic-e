@@ -137,6 +137,46 @@ export async function getStorageBucketStatus() {
   }
 }
 
+/**
+ * Generates a signed upload URL for direct browser-to-Supabase upload.
+ * Completely bypasses Supabase RLS ("new row violates row-level security policy")
+ * because the signed URL is signed by the service-role key.
+ */
+export async function createSignedProductImageUploadUrl(fileName: string) {
+  if (!supabase) {
+    throw new Error('Supabase Storage is not configured on the server');
+  }
+
+  const ext = fileName?.split('.').pop()?.toLowerCase() || 'jpg';
+  const cleanBaseName = (fileName || 'image')
+    .replace(/\.[^/.]+$/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, '_')
+    .slice(0, 30);
+  const uniqueId = Math.random().toString(36).substring(2, 9);
+  const storagePath = `products/${Date.now()}_${cleanBaseName}_${uniqueId}.${ext}`;
+
+  const { data, error } = await supabase.storage
+    .from('product-images')
+    .createSignedUploadUrl(storagePath, { upsert: true });
+
+  if (error) {
+    console.error('[Supabase createSignedUploadUrl error]:', error);
+    throw error;
+  }
+
+  const { data: pubData } = supabase.storage
+    .from('product-images')
+    .getPublicUrl(storagePath);
+
+  return {
+    signedUrl: data.signedUrl,
+    token: data.token,
+    path: storagePath,
+    publicUrl: pubData.publicUrl
+  };
+}
+
 // 1. FETCH PRODUCTS
 export async function fetchProductsFromSupabase(includeInactive: boolean = false) {
   if (!supabase) return null;

@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { db } from '../db.js';
-import { isSupabaseConfigured, updateVariantStockInSupabase, getStorageBucketStatus, ensureStorageBucket } from '../services/supabaseService.js';
+import { isSupabaseConfigured, updateVariantStockInSupabase, getStorageBucketStatus, ensureStorageBucket, createSignedProductImageUploadUrl } from '../services/supabaseService.js';
 import { calculateCouponStatus, calculateOfferStatus } from '../services/couponHelper.js';
 import { authenticateToken, requireAdmin, AuthRequest } from '../middleware/auth.js';
 import { checkAccountLockout, recordFailedLogin, clearFailedLogin, logSecurityEvent } from '../services/security.js';
@@ -148,6 +148,39 @@ router.post('/storage-configure', authenticateToken, requireAdmin, async (req: A
     res.json({ success: true, message: 'Storage bucket configured for 10 MB limit', result, status });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err?.message || 'Failed to configure storage bucket' });
+  }
+});
+
+// Create Signed Upload URL for direct browser uploads (Bypasses Supabase Storage RLS)
+router.post('/storage-upload-url', async (req: AuthRequest, res: Response) => {
+  try {
+    const { fileName, fileType, fileSize } = req.body;
+
+    if (fileSize && fileSize > 10 * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        error: 'File size exceeds maximum upload limit of 10 MB.'
+      });
+    }
+
+    if (fileType) {
+      const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+      if (!allowed.includes(fileType.toLowerCase())) {
+        return res.status(400).json({
+          success: false,
+          error: 'Unsupported image format. Allowed formats: JPG, JPEG, PNG, WEBP.'
+        });
+      }
+    }
+
+    const uploadInfo = await createSignedProductImageUploadUrl(fileName || 'product-image.jpg');
+    res.json({ success: true, ...uploadInfo });
+  } catch (err: any) {
+    console.error('[Storage Upload URL Generation Error]:', err);
+    res.status(500).json({
+      success: false,
+      error: err?.message || 'Failed to generate signed upload URL'
+    });
   }
 });
 

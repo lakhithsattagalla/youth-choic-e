@@ -82,33 +82,92 @@ export interface UploadProductImageResult {
 }
 
 /**
- * Uploads an image directly from the browser to Supabase Storage bucket 'product-images'.
- * Emits progress percent (0-100) via onProgress callback.
- * Returns the public image URL and storage path.
+ * Direct upload helper using a pre-signed Supabase Storage upload URL.
+ * Completely bypasses Supabase RLS ("new row violates row-level security policy")
+ * because the signed URL is authenticated via the server's service-role key.
  */
-export async function uploadProductImageDirect(
+function uploadToSignedUrlDirect(
   file: File,
+  signedUrl: string,
+  token: string,
+  publicUrl: string,
+  storagePath: string,
   onProgress?: UploadProgressCallback
 ): Promise<UploadProductImageResult> {
-  // 1. Validate file
-  const validation = validateProductImage(file);
-  if (!validation.valid) {
-    throw new Error(validation.error || 'Invalid image file');
-  }
+  return new Promise((resolve, reject) => {
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', signedUrl, true);
+      xhr.setRequestHeader('x-upsert', 'true');
+      xhr.setRequestHeader('Content-Type', file.type || 'image/jpeg');
 
-  // 2. Generate clean, collision-free storage path
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const cleanBaseName = file.name
-    .replace(/\.[^/.]+$/, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]/g, '_')
-    .slice(0, 30);
-  const uniqueId = Math.random().toString(36).substring(2, 9);
-  const storagePath = `products/${Date.now()}_${cleanBaseName}_${uniqueId}.${ext}`;
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable && onProgress) {
+          const percent = Math.min(98, Math.round((event.loaded / event.total) * 90) + 10);
+          onProgress(percent);
+        }
+      };
 
-  if (onProgress) onProgress(10);
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          if (onProgress) onProgress(100);
+          resolve({
+            publicUrl,
+            storagePath,
+            fileName: file.name
+          });
+        } else {
+          // If XHR status is non-2xx, attempt fallback with Supabase JS uploadToSignedUrl
+          supabase.storage
+            .from(PRODUCT_IMAGES_BUCKET)
+            .uploadToSignedUrl(storagePath, token, file)
+            .then(({ data, error }) => {
+              if (error) {
+                reject(new Error(error.message || `Upload failed with status ${xhr.status}`));
+              } else if (data) {
+                if (onProgress) onProgress(100);
+                resolve({ publicUrl, storagePath, fileName: file.name });
+              }
+            })
+            .catch(() => {
+              reject(new Error(`Upload failed with status ${xhr.status}`));
+            });
+        }
+      };
 
-  // 3. Perform upload with XMLHttpRequest to provide real-time progress reporting
+      xhr.onerror = () => {
+        // Fallback to Supabase JS uploadToSignedUrl
+        supabase.storage
+          .from(PRODUCT_IMAGES_BUCKET)
+          .uploadToSignedUrl(storagePath, token, file)
+          .then(({ data, error }) => {
+            if (error) {
+              reject(new Error(error.message || 'Direct upload to signed URL failed.'));
+            } else if (data) {
+              if (onProgress) onProgress(100);
+              resolve({ publicUrl, storagePath, fileName: file.name });
+            }
+          })
+          .catch(err => {
+            reject(new Error(err?.message || 'Network error during upload to Supabase Storage.'));
+          });
+      };
+
+      xhr.send(file);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+/**
+ * Fallback direct upload using anon key and XMLHttpRequest
+ */
+function uploadViaDirectAnon(
+  file: File,
+  storagePath: string,
+  onProgress?: UploadProgressCallback
+): Promise<UploadProductImageResult> {
   return new Promise((resolve, reject) => {
     try {
       const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${PRODUCT_IMAGES_BUCKET}/${storagePath}`;
@@ -153,7 +212,6 @@ export async function uploadProductImageDirect(
       };
 
       xhr.onerror = () => {
-        // Fallback: try supabase storage JS client in case CORS or endpoint path differs
         supabase.storage
           .from(PRODUCT_IMAGES_BUCKET)
           .upload(storagePath, file, {
@@ -164,7 +222,7 @@ export async function uploadProductImageDirect(
             if (error) {
               reject(
                 new Error(
-                  `Upload error: ${error.message}. If using Supabase free tier, check that your project is unpaused in the Supabase Dashboard.`
+                  `Upload error: ${error.message}.`
                 )
               );
             } else if (data) {
@@ -194,6 +252,72 @@ export async function uploadProductImageDirect(
       reject(err);
     }
   });
+}
+
+/**
+ * Uploads an image directly from the browser to Supabase Storage bucket 'product-images'.
+ * 1. Requests a secure signed upload URL from the server (bypassing RLS entirely).
+ * 2. Uploads the image file directly from the browser to Supabase Storage with progress tracking.
+ * 3. Falls back to direct anon upload if offline or serverless cold start occurs.
+ * Emits progress percent (0-100) via onProgress callback.
+ * Returns the public image URL and storage path.
+ */
+export async function uploadProductImageDirect(
+  file: File,
+  onProgress?: UploadProgressCallback
+): Promise<UploadProductImageResult> {
+  // 1. Validate file format and size
+  const validation = validateProductImage(file);
+  if (!validation.valid) {
+    throw new Error(validation.error || 'Invalid image file');
+  }
+
+  if (onProgress) onProgress(5);
+
+  // 2. Request a Signed Upload URL from the server (bypasses Supabase RLS)
+  try {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch('/api/admin/storage-upload-url', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.signedUrl) {
+        return await uploadToSignedUrlDirect(
+          file,
+          data.signedUrl,
+          data.token,
+          data.publicUrl,
+          data.path,
+          onProgress
+        );
+      }
+    }
+  } catch (signedErr) {
+    console.warn('[Supabase Direct Upload] Signed URL generation failed, attempting anon fallback:', signedErr);
+  }
+
+  // 3. Fallback: Collision-free storage path for direct anon upload
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const cleanBaseName = file.name
+    .replace(/\.[^/.]+$/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, '_')
+    .slice(0, 30);
+  const uniqueId = Math.random().toString(36).substring(2, 9);
+  const storagePath = `products/${Date.now()}_${cleanBaseName}_${uniqueId}.${ext}`;
+
+  return uploadViaDirectAnon(file, storagePath, onProgress);
 }
 
 /**
