@@ -79,8 +79,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Product Image */}
       <Link to={`/products/${product.id}`} className="block relative aspect-[4/5] bg-neutral-950 overflow-hidden">
         <img
-          src={product.primary_image}
+          src={product.primary_image || 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop&q=80'}
           alt={product.name}
+          onError={(e: any) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop&q=80';
+          }}
           className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />

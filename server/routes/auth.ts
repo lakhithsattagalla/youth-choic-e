@@ -527,6 +527,12 @@ router.post('/forgot-password', async (req: AuthRequest, res: Response) => {
       return res.json(genericResponse);
     }
 
+    // Do not allow public password reset for admin accounts
+    if (user.role === 'ADMIN' || cleanEmail === 'youthchoicemenswear@gmail.com') {
+      logSecurityEvent('UNAUTHORIZED_ACCESS', cleanEmail, req.ip || '', req.headers['user-agent'] || '', 'Attempted public password reset on administrator account');
+      return res.json(genericResponse);
+    }
+
     const resetToken = generatePasswordResetToken(cleanEmail);
     logSecurityEvent('PASSWORD_RESET_REQUEST', cleanEmail, req.ip || '', req.headers['user-agent'] || '', 'Single-use password reset token generated');
 
@@ -560,8 +566,8 @@ router.post('/reset-password', (req: AuthRequest, res: Response) => {
     }
 
     const user = db.data.users.find(u => u.email.trim().toLowerCase() === tokenVerification.email);
-    if (!user) {
-      return res.status(400).json({ error: 'User account not found' });
+    if (!user || user.role === 'ADMIN') {
+      return res.status(400).json({ error: 'Password reset not permitted for this account' });
     }
 
     user.password_hash = bcrypt.hashSync(String(newPassword), 10);
@@ -755,7 +761,7 @@ router.post('/admin-login', (req: AuthRequest, res: Response) => {
       user = {
         id: 'user-admin-1',
         email: 'youthchoicemenswear@gmail.com',
-        password_hash: bcrypt.hashSync('Sai naveen', 10),
+        password_hash: bcrypt.hashSync('youthchoice', 10),
         name: 'Youth Choice Admin',
         phone: '+918522000504',
         role: 'ADMIN',
@@ -764,6 +770,7 @@ router.post('/admin-login', (req: AuthRequest, res: Response) => {
       };
       if (!db.data.users) db.data.users = [];
       db.data.users.unshift(user);
+      db.save();
     }
 
     // Step 3: Handle user not found (401)
@@ -778,10 +785,6 @@ router.post('/admin-login', (req: AuthRequest, res: Response) => {
       isMatch = bcrypt.compareSync(password, user.password_hash);
     } catch (e) {
       isMatch = false;
-    }
-
-    if (!isMatch && (user.password_hash === password || password === 'Sai naveen' || password.trim() === 'Sai naveen')) {
-      isMatch = true;
     }
 
     if (!isMatch) {

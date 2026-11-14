@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { db } from '../db.js';
-import { isSupabaseConfigured, updateVariantStockInSupabase, getStorageBucketStatus, ensureStorageBucket, createSignedProductImageUploadUrl } from '../services/supabaseService.js';
+import { isSupabaseConfigured, updateVariantStockInSupabase, getStorageBucketStatus, ensureStorageBucket, createSignedProductImageUploadUrl, updateAdminPasswordInSupabase } from '../services/supabaseService.js';
+import { runSupabaseMigration } from '../services/dbMigrationService.js';
 import { calculateCouponStatus, calculateOfferStatus } from '../services/couponHelper.js';
 import { authenticateToken, requireAdmin, AuthRequest } from '../middleware/auth.js';
 import { checkAccountLockout, recordFailedLogin, clearFailedLogin, logSecurityEvent } from '../services/security.js';
@@ -55,7 +56,7 @@ const handleAdminLoginRequest = (req: AuthRequest, res: Response) => {
       user = {
         id: 'user-admin-1',
         email: 'youthchoicemenswear@gmail.com',
-        password_hash: bcrypt.hashSync('Sai naveen', 10),
+        password_hash: bcrypt.hashSync('youthchoice', 10),
         name: 'Youth Choice Admin',
         phone: '+918522000504',
         role: 'ADMIN',
@@ -64,6 +65,7 @@ const handleAdminLoginRequest = (req: AuthRequest, res: Response) => {
       };
       if (!db.data.users) db.data.users = [];
       db.data.users.unshift(user);
+      db.save();
     }
 
     // Step 3: Handle user not found (401)
@@ -78,10 +80,6 @@ const handleAdminLoginRequest = (req: AuthRequest, res: Response) => {
       isMatch = bcrypt.compareSync(password, user.password_hash);
     } catch (e) {
       isMatch = false;
-    }
-
-    if (!isMatch && (user.password_hash === password || password === 'Sai naveen' || password.trim() === 'Sai naveen')) {
-      isMatch = true;
     }
 
     if (!isMatch) {
@@ -130,6 +128,65 @@ const handleAdminLoginRequest = (req: AuthRequest, res: Response) => {
 // Mount login route aliases on admin router (/api/admin/login & /api/admin/admin-login)
 router.post('/login', handleAdminLoginRequest);
 router.post('/admin-login', handleAdminLoginRequest);
+
+// Dedicated Admin Password Change Endpoint (Strictly Authenticated Admin Only)
+router.post('/change-password', authenticateToken, requireAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Current password and new password are required.' });
+    }
+
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long.' });
+    }
+
+    if (confirmPassword !== undefined && newPassword !== confirmPassword) {
+      return res.status(400).json({ success: false, message: 'New password and confirmation do not match.' });
+    }
+
+    const adminId = req.user?.id;
+    const admin = (db.data?.users || []).find(u => u.id === adminId && u.role === 'ADMIN');
+    if (!admin) {
+      return res.status(403).json({ success: false, message: 'Admin account not found or unauthorized.' });
+    }
+
+    // Verify current password
+    let isCurrentValid = false;
+    try {
+      isCurrentValid = bcrypt.compareSync(currentPassword, admin.password_hash);
+    } catch (e) {
+      isCurrentValid = false;
+    }
+
+    if (!isCurrentValid) {
+      logSecurityEvent('UNAUTHORIZED_ACCESS', admin.email, req.ip || '', req.headers['user-agent'] || '', 'Failed admin password change: incorrect current password');
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    }
+
+    // Hash and permanently store new password
+    const newHash = bcrypt.hashSync(String(newPassword), 10);
+    admin.password_hash = newHash;
+    db.save();
+
+    // Optionally sync with Supabase PostgreSQL if configured
+    if (isSupabaseConfigured()) {
+      try {
+        await updateAdminPasswordInSupabase(admin.email, newHash);
+      } catch (sbErr) {
+        console.warn('[Supabase admin password sync notice]:', sbErr);
+      }
+    }
+
+    logSecurityEvent('PASSWORD_RESET_SUCCESS', admin.email, req.ip || '', req.headers['user-agent'] || '', 'Admin password successfully changed by authorized admin');
+
+    return res.json({ success: true, message: 'Admin password updated successfully.' });
+  } catch (err: any) {
+    console.error('[Admin Change Password Error]:', err);
+    return res.status(500).json({ success: false, message: 'Failed to change admin password: ' + (err.message || 'Server error') });
+  }
+});
 
 // Supabase Storage Bucket Configuration & Status
 router.get('/storage-status', async (req: AuthRequest, res: Response) => {
@@ -180,6 +237,20 @@ router.post('/storage-upload-url', async (req: AuthRequest, res: Response) => {
     res.status(500).json({
       success: false,
       error: err?.message || 'Failed to generate signed upload URL'
+    });
+  }
+});
+
+// Run Supabase Database & Storage Policies Migration
+router.post('/migrate-db', authenticateToken, requireAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await runSupabaseMigration();
+    res.json({ success: true, result });
+  } catch (err: any) {
+    console.error('[Admin DB Migration Error]:', err);
+    res.status(500).json({
+      success: false,
+      error: err?.message || 'Database migration failed'
     });
   }
 });

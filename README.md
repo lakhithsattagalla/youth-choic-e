@@ -50,7 +50,7 @@ npm run build
 ## 🔐 Executive Admin Credentials
 
 * **Email:** `youthchoicemenswear@gmail.com`
-* **Password:** `Sai naveen`
+* **Temporary Password:** `youthchoice`
 
 ---
 

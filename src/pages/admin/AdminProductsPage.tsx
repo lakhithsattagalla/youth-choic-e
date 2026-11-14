@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Eye, Search, Check, AlertCircle, Upload, Image as ImageIcon, X, Camera, Tag, Layers, Sparkles, Sliders, Palette } from 'lucide-react';
 import { apiRequest } from '../../services/api';
 import { ProductImageManager, ProductImageItem } from '../../components/ProductImageManager';
-import { saveProductImagesToSupabase, deleteProductImageFromStorage } from '../../lib/supabase';
+import { saveProductImagesToSupabase, deleteProductImageFromStorage, ensurePermanentPublicImageUrl } from '../../lib/supabase';
 
 const PRESET_SIZES_SHIRTS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 const PRESET_SIZES_PANTS = ['28', '30', '32', '34', '36', '38', '40'];
@@ -207,18 +207,23 @@ export const AdminProductsPage: React.FC = () => {
         return;
       }
 
-      // Prepare clean images (never Base64)
+      if (addImages.some(img => img.error)) {
+        alert('Some images failed to upload. Please remove or replace the failed images before saving.');
+        return;
+      }
+
+      // Prepare clean permanent images (never Base64 or temporary blob:)
       const cleanImages = addImages
-        .filter(img => img.url && !img.isUploading && !img.url.startsWith('data:image'))
+        .filter(img => img.url && !img.isUploading && !img.url.startsWith('blob:') && !img.url.startsWith('data:'))
         .map((img, idx) => ({
-          url: img.url,
+          url: ensurePermanentPublicImageUrl(img.url),
           color: img.color || '',
           is_primary: img.is_primary,
           display_order: idx
         }));
 
       if (cleanImages.length === 0) {
-        alert('Please upload or provide at least one product image.');
+        alert('Please upload or provide at least one valid product image.');
         return;
       }
 
@@ -340,18 +345,23 @@ export const AdminProductsPage: React.FC = () => {
         return;
       }
 
-      // Prepare clean images (never Base64)
+      if (editImages.some(img => img.error)) {
+        alert('Some images failed to upload. Please remove or replace the failed images before saving.');
+        return;
+      }
+
+      // Prepare clean permanent images (never Base64 or temporary blob:)
       const cleanImages = editImages
-        .filter(img => img.url && !img.isUploading && !img.url.startsWith('data:image'))
+        .filter(img => img.url && !img.isUploading && !img.url.startsWith('blob:') && !img.url.startsWith('data:'))
         .map((img, idx) => ({
-          url: img.url,
+          url: ensurePermanentPublicImageUrl(img.url),
           color: img.color || '',
           is_primary: img.is_primary,
           display_order: idx
         }));
 
       if (cleanImages.length === 0) {
-        alert('Please upload or provide at least one product image.');
+        alert('Please upload or provide at least one valid product image.');
         return;
       }
 
@@ -496,7 +506,15 @@ export const AdminProductsPage: React.FC = () => {
                 return (
                   <tr key={product.id} className="hover:bg-neutral-800/40">
                     <td className="py-3 px-4 flex items-center space-x-3">
-                      <img src={product.primary_image} alt="" className="w-10 h-12 object-cover rounded border border-neutral-800 shrink-0" />
+                      <img
+                        src={product.primary_image || 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=120&auto=format&fit=crop&q=60'}
+                        alt={product.name}
+                        onError={(e: any) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=120&auto=format&fit=crop&q=60';
+                        }}
+                        className="w-10 h-12 object-cover rounded border border-neutral-800 shrink-0 bg-neutral-900"
+                      />
                       <div>
                         <p className="font-bold text-white text-xs">{product.name}</p>
                         <p className="text-[10px] text-amber-400 font-mono">{product.sku_prefix}</p>

@@ -4,13 +4,19 @@ import { ShieldCheck, Lock, Mail, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const AdminLoginPage: React.FC = () => {
-  const { adminLogin } = useAuth();
+  const { user, adminLogin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (user && user.role === 'ADMIN') {
+      navigate('/admin');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

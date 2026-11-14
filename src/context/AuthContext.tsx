@@ -87,15 +87,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch {
         setUser({ name: savedUser, email: savedUser, role: 'CUSTOMER' });
       }
-    } else if (token) {
+    }
+
+    if (token) {
       apiRequest('/auth/me')
         .then((res) => {
-          setUser(res.user);
+          if (res?.user) {
+            setUser(res.user);
+            localStorage.setItem('store_user', JSON.stringify(res.user));
+          }
         })
-        .catch(() => {
-          localStorage.removeItem('token');
-          setToken(null);
-          setUser(null);
+        .catch((err: any) => {
+          const msg = String(err?.message || '').toLowerCase();
+          if (msg.includes('session expired') || msg.includes('unauthorized') || msg.includes('access token') || msg.includes('access denied')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('store_user');
+            setToken(null);
+            setUser(null);
+          }
         })
         .finally(() => setIsLoading(false));
     } else {

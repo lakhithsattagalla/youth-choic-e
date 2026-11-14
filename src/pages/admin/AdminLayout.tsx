@@ -104,7 +104,10 @@ export const AdminLayout: React.FC = () => {
           </Link>
 
           <button 
-            onClick={logout}
+            onClick={() => {
+              logout();
+              navigate('/admin/login');
+            }}
             className="w-full flex items-center space-x-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-neutral-900 font-semibold text-left"
           >
             <LogOut className="w-3.5 h-3.5" />

@@ -71,6 +71,27 @@ export function validateProductImage(file: File): ImageValidationResult {
   return { valid: true };
 }
 
+/**
+ * Ensures any image URL is converted to a permanent, non-expiring public URL.
+ * Strips temporary tokens, signatures, and converts upload/sign endpoints to /public/.
+ */
+export function ensurePermanentPublicImageUrl(url: string): string {
+  if (!url || typeof url !== 'string') return '';
+  let clean = url.trim();
+
+  if (clean.includes('/storage/v1/object/')) {
+    // 1. Strip ?token=... or query params
+    clean = clean.split('?')[0];
+
+    // 2. Convert signed paths to permanent public paths
+    clean = clean
+      .replace('/storage/v1/object/upload/sign/', '/storage/v1/object/public/')
+      .replace('/storage/v1/object/sign/', '/storage/v1/object/public/');
+  }
+
+  return clean;
+}
+
 export interface UploadProgressCallback {
   (progressPercent: number): void;
 }
@@ -112,7 +133,7 @@ function uploadToSignedUrlDirect(
         if (xhr.status >= 200 && xhr.status < 300) {
           if (onProgress) onProgress(100);
           resolve({
-            publicUrl,
+            publicUrl: ensurePermanentPublicImageUrl(publicUrl),
             storagePath,
             fileName: file.name
           });
@@ -126,7 +147,11 @@ function uploadToSignedUrlDirect(
                 reject(new Error(error.message || `Upload failed with status ${xhr.status}`));
               } else if (data) {
                 if (onProgress) onProgress(100);
-                resolve({ publicUrl, storagePath, fileName: file.name });
+                resolve({
+                  publicUrl: ensurePermanentPublicImageUrl(publicUrl),
+                  storagePath,
+                  fileName: file.name
+                });
               }
             })
             .catch(() => {
@@ -145,7 +170,11 @@ function uploadToSignedUrlDirect(
               reject(new Error(error.message || 'Direct upload to signed URL failed.'));
             } else if (data) {
               if (onProgress) onProgress(100);
-              resolve({ publicUrl, storagePath, fileName: file.name });
+              resolve({
+                publicUrl: ensurePermanentPublicImageUrl(publicUrl),
+                storagePath,
+                fileName: file.name
+              });
             }
           })
           .catch(err => {
@@ -189,9 +218,9 @@ function uploadViaDirectAnon(
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           if (onProgress) onProgress(100);
-          const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGES_BUCKET}/${storagePath}`;
+          const rawUrl = `${SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGES_BUCKET}/${storagePath}`;
           resolve({
-            publicUrl,
+            publicUrl: ensurePermanentPublicImageUrl(rawUrl),
             storagePath,
             fileName: file.name
           });
@@ -231,7 +260,7 @@ function uploadViaDirectAnon(
                 .from(PRODUCT_IMAGES_BUCKET)
                 .getPublicUrl(data.path);
               resolve({
-                publicUrl: pubData.publicUrl,
+                publicUrl: ensurePermanentPublicImageUrl(pubData.publicUrl),
                 storagePath: data.path,
                 fileName: file.name
               });

@@ -3,10 +3,12 @@ import { db, deleteProductFromDb } from '../db.js';
 import {
   isSupabaseConfigured,
   fetchProductsFromSupabase,
+  fetchProductByIdFromSupabase,
   deleteProductFromSupabase,
   createProductInSupabase,
   updateProductInSupabase,
-  createSignedProductImageUploadUrl
+  createSignedProductImageUploadUrl,
+  ensurePermanentPublicImageUrl
 } from '../services/supabaseService.js';
 import { getProductEffectivePrice } from '../services/couponHelper.js';
 import { authenticateToken, requireAdmin, AuthRequest } from '../middleware/auth.js';
@@ -127,10 +129,34 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     const fullProducts = products.map(p => {
       const brandObj = (db.data?.brands || []).find(b => b.id === p.brand_id);
       const catObj = (db.data?.categories || []).find(c => c.id === p.category_id);
-      const images = (db.data?.product_images || []).filter(img => img.product_id === p.id);
-      const variants = (db.data?.product_variants || []).filter(v => v.product_id === p.id);
+      
+      // Prefer Supabase images if present, fallback to local DB
+      const localImages = (db.data?.product_images || []).filter(img => img.product_id === p.id);
+      const rawImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images : localImages;
+      const images = rawImages.map((img: any, idx: number) => {
+        const rawUrl = typeof img === 'string' ? img : (img.image_url || img.url || '');
+        const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+        return {
+          id: img.id || `img-${p.id}-${idx}`,
+          product_id: p.id,
+          image_url: cleanUrl,
+          url: cleanUrl,
+          color: img.color || '',
+          is_primary: idx === 0 || !!img.is_primary,
+          display_order: img.display_order !== undefined ? img.display_order : idx
+        };
+      });
 
-      const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
+      const localVariants = (db.data?.product_variants || []).filter(v => v.product_id === p.id);
+      const variants = (Array.isArray(p.variants) && p.variants.length > 0) ? p.variants : localVariants;
+
+      const totalStock = p.total_stock !== undefined
+        ? p.total_stock
+        : variants.reduce((sum: number, v: any) => sum + (v.stock || 0), 0);
+
+      const primaryImg = p.primary_image
+        ? ensurePermanentPublicImageUrl(p.primary_image)
+        : (images.find((img: any) => img.is_primary)?.image_url || images[0]?.image_url || '');
 
       const offers = db.data?.offers || [];
       const now = new Date();
@@ -138,12 +164,12 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
       return {
         ...p,
-        brand_name: brandObj?.name || 'Brand',
-        category_name: catObj?.name || 'Category',
+        brand_name: p.brand_name || brandObj?.name || 'Brand',
+        category_name: p.category_name || catObj?.name || 'Category',
         images,
         variants,
         total_stock: totalStock,
-        primary_image: images.find(img => img.is_primary)?.image_url || images[0]?.image_url || '',
+        primary_image: primaryImg,
         mrp: pricing.mrp,
         price: pricing.offerPrice,
         original_price: pricing.mrp,
@@ -164,20 +190,45 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 });
 
 // Get Single Product by ID or Slug with full details
-router.get('/:id', (req: AuthRequest, res: Response) => {
+router.get('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const product = (db.data?.products || []).find(p => p.id === id || p.slug === id);
+    let product: any = (db.data?.products || []).find(p => p.id === id || p.slug === id);
+
+    if (!product && isSupabaseConfigured()) {
+      try {
+        product = await fetchProductByIdFromSupabase(id);
+      } catch (sbErr) {
+        console.warn('[Supabase fetch product by id fallback failed]:', sbErr);
+      }
+    }
 
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    const brandObj = (db.data?.brands || []).find(b => b.id === product.brand_id);
-    const catObj = (db.data?.categories || []).find(c => c.id === product.category_id);
-    const images = (db.data?.product_images || []).filter(img => img.product_id === product.id);
-    const variants = (db.data?.product_variants || []).filter(v => v.product_id === product.id);
-    const reviews = (db.data?.reviews || []).filter(r => r.product_id === product.id);
+    const brandObj = product.brand || (db.data?.brands || []).find(b => b.id === product.brand_id);
+    const catObj = product.category || (db.data?.categories || []).find(c => c.id === product.category_id);
+    
+    const localImages = (db.data?.product_images || []).filter(img => img.product_id === product.id);
+    const rawImages = (Array.isArray(product.images) && product.images.length > 0) ? product.images : localImages;
+    const images = rawImages.map((img: any, idx: number) => {
+      const rawUrl = typeof img === 'string' ? img : (img.image_url || img.url || '');
+      const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+      return {
+        id: img.id || `img-${product.id}-${idx}`,
+        product_id: product.id,
+        image_url: cleanUrl,
+        url: cleanUrl,
+        color: img.color || '',
+        is_primary: idx === 0 || !!img.is_primary,
+        display_order: img.display_order !== undefined ? img.display_order : idx
+      };
+    });
+
+    const localVariants = (db.data?.product_variants || []).filter(v => v.product_id === product.id);
+    const variants = (Array.isArray(product.variants) && product.variants.length > 0) ? product.variants : localVariants;
+    const reviews = product.reviews || (db.data?.reviews || []).filter(r => r.product_id === product.id);
 
     const offers = db.data?.offers || [];
     const now = new Date();
@@ -202,9 +253,12 @@ router.get('/:id', (req: AuthRequest, res: Response) => {
         ...product,
         brand: brandObj,
         category: catObj,
+        brand_name: product.brand_name || brandObj?.name || 'Brand',
+        category_name: product.category_name || catObj?.name || 'Category',
         images,
         variants,
         reviews,
+        primary_image: product.primary_image ? ensurePermanentPublicImageUrl(product.primary_image) : (images.find((i: any) => i.is_primary)?.image_url || images[0]?.image_url || ''),
         mrp: pricing.mrp,
         price: pricing.offerPrice,
         original_price: pricing.mrp,
@@ -261,15 +315,23 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
       variants // array of { color, size, stock, sku }
     } = req.body;
 
-    // Validate immediately that no Base64 image data is sent through Vercel API routes
+    // Validate immediately that no Base64 or temporary blob: image data is sent through API routes
     if (Array.isArray(images)) {
       for (const img of images) {
         const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
-        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
-          return res.status(400).json({
-            success: false,
-            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
-          });
+        if (typeof urlStr === 'string') {
+          if (urlStr.startsWith('data:image') || urlStr.length > 2000) {
+            return res.status(400).json({
+              success: false,
+              error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
+            });
+          }
+          if (urlStr.startsWith('blob:')) {
+            return res.status(400).json({
+              success: false,
+              error: 'Temporary browser blob URLs cannot be saved. Please wait for image upload to complete.'
+            });
+          }
         }
       }
     }
@@ -278,18 +340,39 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
       return res.status(400).json({ success: false, message: 'Missing required product fields' });
     }
 
-    if (isSupabaseConfigured()) {
-      try {
-        await createProductInSupabase(req.body);
-      } catch (sbErr) {
-        console.warn('[Supabase create product failed, falling back to persistent DB]:', sbErr);
-      }
-    }
-
-    const prodId = `prod-${Date.now()}`;
+    const prodId = req.body.id || `prod-${Date.now()}`;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    const discount_pct = Math.round(((mrp - selling_price) / mrp) * 100);
+    const discount_pct = Math.round(((Number(mrp) - Number(selling_price)) / Number(mrp)) * 100);
     const now = new Date().toISOString();
+
+    // Sanitize image URLs to ensure they are permanent public URLs
+    const sanitizedImages = Array.isArray(images)
+      ? images
+          .filter((img: any) => {
+            const u = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+            return u && !u.startsWith('blob:') && !u.startsWith('data:');
+          })
+          .map((img: any, idx: number) => {
+            const rawUrl = typeof img === 'string' ? img : (img.url || img.image_url || '');
+            const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+            return {
+              id: img.id || `img-${prodId}-${idx}`,
+              product_id: prodId,
+              image_url: cleanUrl,
+              url: cleanUrl,
+              color: img.color || '',
+              is_primary: idx === 0 || !!img.is_primary,
+              display_order: img.display_order !== undefined ? img.display_order : idx
+            };
+          })
+      : [];
+
+    if (sanitizedImages.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'At least one valid permanent product image is required.'
+      });
+    }
 
     const newProduct = {
       id: prodId,
@@ -312,29 +395,38 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
       is_trending: true,
       is_new_arrival: true,
       status: 'ACTIVE' as const,
-      created_at: now
+      created_at: now,
+      updated_at: now
     };
+
+    if (isSupabaseConfigured()) {
+      try {
+        await createProductInSupabase({
+          ...req.body,
+          id: prodId,
+          slug,
+          images: sanitizedImages
+        });
+      } catch (sbErr) {
+        console.warn('[Supabase create product failed, falling back to persistent DB]:', sbErr);
+      }
+    }
 
     if (!db.data.products) db.data.products = [];
     db.data.products.push(newProduct);
 
     // Save Images
     if (!db.data.product_images) db.data.product_images = [];
-    if (Array.isArray(images)) {
-      images.forEach((img: any, idx: number) => {
-        const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
-        if (urlStr) {
-          db.data.product_images.push({
-            id: `img-${prodId}-${idx}`,
-            product_id: prodId,
-            image_url: urlStr,
-            color: img.color || '',
-            is_primary: idx === 0 || !!img.is_primary,
-            display_order: img.display_order !== undefined ? img.display_order : idx
-          });
-        }
+    sanitizedImages.forEach((img: any) => {
+      db.data.product_images.push({
+        id: img.id,
+        product_id: prodId,
+        image_url: img.image_url,
+        color: img.color || '',
+        is_primary: img.is_primary,
+        display_order: img.display_order
       });
-    }
+    });
 
     // Save Variants
     if (!db.data.product_variants) db.data.product_variants = [];
@@ -354,7 +446,15 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res: 
     }
 
     db.save();
-    res.status(201).json({ success: true, message: 'Product created successfully', product: newProduct });
+    res.status(201).json({
+      success: true,
+      message: 'Product created successfully',
+      product: {
+        ...newProduct,
+        images: sanitizedImages,
+        primary_image: sanitizedImages.find(i => i.is_primary)?.image_url || sanitizedImages[0]?.image_url
+      }
+    });
   } catch (err: any) {
     res.status(500).json({ success: false, message: err.message || 'Failed to create product' });
   }
@@ -366,22 +466,57 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
     const { id } = req.params;
     const targetId = String(id).trim();
 
-    // Validate that no Base64 image data is sent through Vercel API routes
+    // Validate that no Base64 or temporary blob: image data is sent through API routes
     if (Array.isArray(req.body.images)) {
       for (const img of req.body.images) {
         const urlStr = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
-        if (typeof urlStr === 'string' && (urlStr.startsWith('data:image') || urlStr.length > 2000)) {
-          return res.status(400).json({
-            success: false,
-            error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
-          });
+        if (typeof urlStr === 'string') {
+          if (urlStr.startsWith('data:image') || urlStr.length > 2000) {
+            return res.status(400).json({
+              success: false,
+              error: 'Base64 image forwarding is prohibited. Upload images directly to Supabase Storage and pass the public URL.'
+            });
+          }
+          if (urlStr.startsWith('blob:')) {
+            return res.status(400).json({
+              success: false,
+              error: 'Temporary browser blob URLs cannot be saved. Please wait for image upload to complete.'
+            });
+          }
         }
       }
     }
 
+    // Sanitize image URLs with permanent public URL converter
+    let sanitizedImages: any[] | undefined = undefined;
+    if (Array.isArray(req.body.images)) {
+      sanitizedImages = req.body.images
+        .filter((img: any) => {
+          const u = typeof img === 'string' ? img : (img?.url || img?.image_url || '');
+          return u && !u.startsWith('blob:') && !u.startsWith('data:');
+        })
+        .map((img: any, idx: number) => {
+          const rawUrl = typeof img === 'string' ? img : (img.url || img.image_url || '');
+          const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+          return {
+            id: img.id || `img-${targetId}-${idx}-${Date.now()}`,
+            product_id: targetId,
+            image_url: cleanUrl,
+            url: cleanUrl,
+            color: img.color || '',
+            is_primary: idx === 0 || !!img.is_primary,
+            display_order: img.display_order !== undefined ? img.display_order : idx
+          };
+        });
+      req.body.images = sanitizedImages;
+    }
+
     if (isSupabaseConfigured()) {
       try {
-        await updateProductInSupabase(targetId, req.body);
+        await updateProductInSupabase(targetId, {
+          ...req.body,
+          images: sanitizedImages
+        });
       } catch (sbErr) {
         console.warn('[Supabase update product failed, falling back to persistent DB]:', sbErr);
       }
@@ -408,7 +543,6 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
         selling_price,
         sku_prefix,
         status,
-        images,
         variants
       } = req.body;
 
@@ -433,22 +567,23 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
         status: status || current.status,
         mrp: newMrp,
         selling_price: newSelling,
-        discount_pct
+        discount_pct,
+        updated_at: new Date().toISOString()
       };
 
       db.data.products[prodIndex] = updated;
 
-      if (Array.isArray(images) && images.length > 0) {
+      if (Array.isArray(sanitizedImages) && sanitizedImages.length > 0) {
         db.data.product_images = (db.data?.product_images || []).filter(img => String(img.product_id).trim() !== targetId);
 
-        images.forEach((img: any, idx: number) => {
+        sanitizedImages.forEach((img: any) => {
           db.data.product_images.push({
-            id: `img-${targetId}-${idx}-${Date.now()}`,
+            id: img.id,
             product_id: targetId,
-            image_url: typeof img === 'string' ? img : img.url,
+            image_url: img.image_url,
             color: img.color || '',
-            is_primary: idx === 0 || img.is_primary,
-            display_order: idx
+            is_primary: img.is_primary,
+            display_order: img.display_order
           });
         });
       }
@@ -458,7 +593,7 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
         const updatedVariantIds = new Set<string>();
 
         variants.forEach((v: any) => {
-          const variantSku = v.sku || `${updated.sku_prefix}-${(v.color || 'CLR').substring(0, 2).toUpperCase()}-${v.size}`;
+          const variantSku = v.sku || `${sku_prefix || current.sku_prefix}-${(v.color || 'CLR').substring(0, 2).toUpperCase()}-${v.size}`;
           const match = existingVariants.find(ex => ex.color.toLowerCase() === v.color.toLowerCase() && ex.size.toUpperCase() === v.size.toUpperCase());
 
           if (match) {

@@ -17,8 +17,14 @@ import whatsappBotRoutes from './routes/whatsappBot.js';
 import aiRoutes from './routes/ai.js';
 import { db } from './db.js';
 import { ensureStorageBucket } from './services/supabaseService.js';
+import { runSupabaseMigration } from './services/dbMigrationService.js';
 
 dotenv.config();
+
+// Auto-run Supabase PostgreSQL migrations & storage RLS policies
+runSupabaseMigration()
+  .then(res => console.log('[Supabase DB Migration Init]:', res))
+  .catch(e => console.warn('[Supabase DB Migration Init Notice]:', e?.message || e));
 
 // Ensure Supabase Storage bucket 'product-images' is configured with 10 MB limit
 ensureStorageBucket().catch(e => console.warn('[Supabase Storage Init notice]:', e?.message || e));

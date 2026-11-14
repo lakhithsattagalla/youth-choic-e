@@ -173,8 +173,29 @@ export async function createSignedProductImageUploadUrl(fileName: string) {
     signedUrl: data.signedUrl,
     token: data.token,
     path: storagePath,
-    publicUrl: pubData.publicUrl
+    publicUrl: ensurePermanentPublicImageUrl(pubData.publicUrl)
   };
+}
+
+/**
+ * Ensures any image URL is converted to a permanent, non-expiring public URL.
+ * Strips temporary tokens, signatures, and converts upload/sign endpoints to /public/.
+ */
+export function ensurePermanentPublicImageUrl(url: string): string {
+  if (!url || typeof url !== 'string') return '';
+  let clean = url.trim();
+
+  if (clean.includes('/storage/v1/object/')) {
+    // 1. Strip ?token=... or query params
+    clean = clean.split('?')[0];
+
+    // 2. Convert signed paths to permanent public paths
+    clean = clean
+      .replace('/storage/v1/object/upload/sign/', '/storage/v1/object/public/')
+      .replace('/storage/v1/object/sign/', '/storage/v1/object/public/');
+  }
+
+  return clean;
 }
 
 // 1. FETCH PRODUCTS
@@ -214,9 +235,15 @@ export async function fetchProductsFromSupabase(includeInactive: boolean = false
   return products.map(p => {
     const brandObj = brands.find(b => b.id === p.brand_id);
     const catObj = categories.find(c => c.id === p.category_id);
-    const pImages = images.filter(img => img.product_id === p.id);
+    const pImages = images
+      .filter(img => img.product_id === p.id)
+      .map(img => ({
+        ...img,
+        image_url: ensurePermanentPublicImageUrl(img.image_url)
+      }));
     const pVariants = variants.filter(v => v.product_id === p.id);
     const totalStock = pVariants.reduce((sum, v) => sum + (v.stock || 0), 0);
+    const primaryImg = pImages.find(i => i.is_primary)?.image_url || pImages[0]?.image_url || '';
 
     return {
       ...p,
@@ -225,7 +252,7 @@ export async function fetchProductsFromSupabase(includeInactive: boolean = false
       images: pImages,
       variants: pVariants,
       total_stock: totalStock,
-      primary_image: pImages.find(i => i.is_primary)?.image_url || pImages[0]?.image_url || '',
+      primary_image: primaryImg,
       price: Number(p.selling_price),
       original_price: Number(p.mrp),
       mrp: Number(p.mrp),
@@ -341,27 +368,33 @@ export async function createProductInSupabase(prodData: any) {
     updated_at: now
   };
 
-  const { error: prodErr } = await supabase.from('products').insert([newProduct]);
+  const { error: prodErr } = await supabase.from('products').upsert([newProduct]);
   if (prodErr) {
     console.error('[Supabase Create Product Error]:', prodErr);
     throw prodErr;
   }
 
   if (Array.isArray(prodData.images) && prodData.images.length > 0) {
-    const imgRecords = prodData.images.map((img: any, idx: number) => ({
-      id: `img-${prodId}-${idx}`,
-      product_id: prodId,
-      image_url: typeof img === 'string' ? img : img.url,
-      color: img.color || '',
-      is_primary: idx === 0 || img.is_primary,
-      display_order: idx
-    }));
+    await supabase.from('product_images').delete().eq('product_id', prodId);
+    const imgRecords = prodData.images.map((img: any, idx: number) => {
+      const rawUrl = typeof img === 'string' ? img : (img.url || img.image_url || '');
+      const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+      return {
+        id: `img-${prodId}-${idx}-${Date.now()}`,
+        product_id: prodId,
+        image_url: cleanUrl,
+        color: img.color || '',
+        is_primary: idx === 0 || !!img.is_primary,
+        display_order: idx
+      };
+    });
     await supabase.from('product_images').insert(imgRecords);
   }
 
   if (Array.isArray(prodData.variants) && prodData.variants.length > 0) {
+    await supabase.from('product_variants').delete().eq('product_id', prodId);
     const varRecords = prodData.variants.map((v: any) => ({
-      id: `var-${prodId}-${v.color}-${v.size}`,
+      id: `var-${prodId}-${v.color}-${v.size}-${Date.now()}`,
       product_id: prodId,
       color: v.color,
       size: v.size,
@@ -372,7 +405,7 @@ export async function createProductInSupabase(prodData: any) {
     await supabase.from('product_variants').insert(varRecords);
   }
 
-  console.log(`[Supabase Create Success] Product '${newProduct.name}' inserted into Supabase.`);
+  console.log(`[Supabase Create Success] Product '${newProduct.name}' (ID: ${prodId}) inserted into Supabase.`);
   return newProduct;
 }
 
@@ -416,14 +449,18 @@ export async function updateProductInSupabase(productId: string, prodData: any) 
 
   if (Array.isArray(prodData.images)) {
     await supabase.from('product_images').delete().eq('product_id', targetId);
-    const imgRecords = prodData.images.map((img: any, idx: number) => ({
-      id: `img-${targetId}-${idx}-${Date.now()}`,
-      product_id: targetId,
-      image_url: typeof img === 'string' ? img : img.url,
-      color: img.color || '',
-      is_primary: idx === 0 || img.is_primary,
-      display_order: idx
-    }));
+    const imgRecords = prodData.images.map((img: any, idx: number) => {
+      const rawUrl = typeof img === 'string' ? img : (img.url || img.image_url || '');
+      const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
+      return {
+        id: `img-${targetId}-${idx}-${Date.now()}`,
+        product_id: targetId,
+        image_url: cleanUrl,
+        color: img.color || '',
+        is_primary: idx === 0 || img.is_primary,
+        display_order: idx
+      };
+    });
     await supabase.from('product_images').insert(imgRecords);
   }
 
@@ -475,4 +512,51 @@ export async function fetchCategoriesFromSupabase() {
   const { data, error } = await supabase.from('categories').select('*').order('name');
   if (error) throw error;
   return data || [];
+}
+
+// 8. USER & AUTHENTICATION (SUPABASE POSTGRESQL)
+export async function fetchUserFromSupabase(emailOrPhone: string) {
+  if (!supabase) return null;
+  const raw = String(emailOrPhone || '').trim().toLowerCase();
+  const digits = raw.replace(/[^0-9]/g, '');
+
+  try {
+    let query = supabase.from('users').select('*');
+    if (raw.includes('@')) {
+      query = query.eq('email', raw);
+    } else if (digits.length >= 8) {
+      query = query.ilike('phone', `%${digits}%`);
+    } else {
+      query = query.or(`email.eq.${raw},phone.ilike.%${digits}%`);
+    }
+
+    const { data, error } = await query.limit(1);
+    if (error || !data || data.length === 0) return null;
+    return data[0];
+  } catch (err: any) {
+    console.warn('[Supabase Fetch User notice]:', err?.message || err);
+    return null;
+  }
+}
+
+export async function updateAdminPasswordInSupabase(email: string, newPasswordHash: string) {
+  if (!supabase) return false;
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({
+        password_hash: newPasswordHash,
+        updated_at: new Date().toISOString()
+      })
+      .eq('email', email.trim().toLowerCase());
+
+    if (error) {
+      console.warn('[Supabase update password notice]:', error.message);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn('[Supabase update password error]:', err?.message || err);
+    return false;
+  }
 }

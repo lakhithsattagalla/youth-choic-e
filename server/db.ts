@@ -442,7 +442,7 @@ function ensureAdminUser() {
     admin = {
       id: 'user-admin-1',
       email: adminEmail,
-      password_hash: bcrypt.hashSync('Sai naveen', 10),
+      password_hash: bcrypt.hashSync('youthchoice', 10),
       name: 'Youth Choice Admin',
       phone: '+918522000504',
       role: 'ADMIN',
@@ -453,20 +453,17 @@ function ensureAdminUser() {
   } else {
     admin.role = 'ADMIN';
     admin.email = adminEmail;
-    admin.phone = '+918522000504';
-    try {
-      if (!admin.password_hash || !bcrypt.compareSync('Sai naveen', admin.password_hash)) {
-        admin.password_hash = bcrypt.hashSync('Sai naveen', 10);
-      }
-    } catch (e) {
-      admin.password_hash = bcrypt.hashSync('Sai naveen', 10);
+    if (!admin.phone) admin.phone = '+918522000504';
+    // Preserve existing password hash permanently; only set fallback if empty
+    if (!admin.password_hash) {
+      admin.password_hash = bcrypt.hashSync('youthchoice', 10);
     }
   }
 }
 
 export function seedDatabase() {
   console.log('Seeding initial Youth Choice The Fashion Store database...');
-  const passwordHashAdmin = bcrypt.hashSync('Sai naveen', 10);
+  const passwordHashAdmin = bcrypt.hashSync('youthchoice', 10);
   const passwordHashUser = bcrypt.hashSync('customer123', 10);
 
   const now = new Date().toISOString();

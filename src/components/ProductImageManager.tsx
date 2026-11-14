@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Upload,
   Image as ImageIcon,
@@ -16,6 +16,7 @@ import {
   uploadProductImageDirect,
   validateProductImage,
   deleteProductImageFromStorage,
+  ensurePermanentPublicImageUrl,
   PRODUCT_IMAGES_BUCKET,
   MAX_IMAGE_SIZE_BYTES
 } from '../lib/supabase';
@@ -51,6 +52,11 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
   const replaceInputRef = useRef<HTMLInputElement>(null);
   const [replaceTargetId, setReplaceTargetId] = useState<string | null>(null);
 
+  const imagesRef = useRef<ProductImageItem[]>(images);
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
+
   const colorsList = availableColors
     .map(c => c.trim())
     .filter(Boolean);
@@ -60,72 +66,97 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     const files = Array.from(fileList);
     if (files.length === 0) return;
 
+    // Validate files and create batch placeholders
+    const validUploadTasks: Array<{
+      file: File;
+      tempId: string;
+      clientPreviewUrl: string;
+      placeholder: ProductImageItem;
+    }> = [];
+
     for (const file of files) {
-      // 1. Validate image format (JPG, JPEG, PNG, WEBP) and max size 10 MB
       const validation = validateProductImage(file);
       if (!validation.valid) {
         setUploadError(validation.error || 'Image exceeds the maximum upload size of 10 MB.');
         continue;
       }
 
-      // 2. Generate instant client-side preview before upload begins
       const clientPreviewUrl = URL.createObjectURL(file);
       const tempId = `upload-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-      const isFirst = images.length === 0;
+      const isFirst = imagesRef.current.length === 0 && validUploadTasks.length === 0;
 
       const placeholder: ProductImageItem = {
         id: tempId,
-        url: clientPreviewUrl,
+        url: '', // Empty until permanent upload completes (prevents premature blob: url saves)
         previewUrl: clientPreviewUrl,
         color: '',
         is_primary: isFirst,
         isUploading: true,
-        uploadProgress: 5
+        uploadProgress: 10
       };
 
-      // Append placeholder with preview immediately to UI
-      const currentImages = [...images, placeholder];
-      onChange(currentImages);
+      validUploadTasks.push({
+        file,
+        tempId,
+        clientPreviewUrl,
+        placeholder
+      });
+    }
 
-      // 3. Perform direct browser upload to Supabase Storage bucket 'product-images'
+    if (validUploadTasks.length === 0) return;
+
+    // Append all placeholders to list in a single batch
+    let currentList = [...imagesRef.current, ...validUploadTasks.map(t => t.placeholder)];
+    imagesRef.current = currentList;
+    onChange(currentList);
+
+    // Process uploads sequentially or concurrently while updating state reliably
+    for (const task of validUploadTasks) {
       try {
-        const result = await uploadProductImageDirect(file, (percent) => {
-          onChange(
-            currentImages.map(item =>
-              item.id === tempId ? { ...item, uploadProgress: percent } : item
-            )
+        const result = await uploadProductImageDirect(task.file, (percent) => {
+          currentList = currentList.map(item =>
+            item.id === task.tempId ? { ...item, uploadProgress: percent } : item
           );
+          imagesRef.current = currentList;
+          onChange(currentList);
         });
 
-        // 4. On success, store the public URL and revoke the client preview
-        URL.revokeObjectURL(clientPreviewUrl);
-        onChange(
-          currentImages.map(item =>
-            item.id === tempId
-              ? {
-                  ...item,
-                  url: result.publicUrl,
-                  previewUrl: undefined,
-                  isUploading: false,
-                  uploadProgress: 100
-                }
-              : item
-          )
+        // Revoke temporary object URL and save permanent public URL
+        URL.revokeObjectURL(task.clientPreviewUrl);
+        const permanentUrl = ensurePermanentPublicImageUrl(result.publicUrl);
+
+        currentList = currentList.map(item =>
+          item.id === task.tempId
+            ? {
+                ...item,
+                url: permanentUrl,
+                previewUrl: undefined,
+                isUploading: false,
+                uploadProgress: 100,
+                error: undefined
+              }
+            : item
         );
+        imagesRef.current = currentList;
+        onChange(currentList);
       } catch (err: any) {
         const errorMsg =
           err?.message ||
-          `Failed to upload "${file.name}". Verify Supabase Storage 'product-images' bucket settings.`;
+          `Failed to upload "${task.file.name}". Verify Supabase Storage 'product-images' bucket settings.`;
         setUploadError(errorMsg);
 
-        // Mark error on card
-        onChange(
-          currentImages.map(item =>
-            item.id === tempId
-              ? { ...item, isUploading: false, error: errorMsg }
-              : item
-          )
+        currentList = currentList.map(item =>
+          item.id === task.tempId
+            ? {
+                ...item,
+                url: '',
+                isUploading: false,
+                error: errorMsg
+              }
+            : item
         );
+        imagesRef.current = currentList;
+        onChange(currentList);
       }
     }
 
@@ -168,61 +199,64 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
     const clientPreviewUrl = URL.createObjectURL(file);
     const targetId = replaceTargetId;
 
-    // Show preview and loading state on the target image
-    onChange(
-      images.map(img =>
-        img.id === targetId
-          ? {
-              ...img,
-              previewUrl: clientPreviewUrl,
-              url: clientPreviewUrl,
-              isUploading: true,
-              uploadProgress: 10,
-              error: undefined
-            }
-          : img
-      )
+    // Show preview and loading state on target
+    let currentList = imagesRef.current.map(img =>
+      img.id === targetId
+        ? {
+            ...img,
+            previewUrl: clientPreviewUrl,
+            url: '', // Clear previous URL while replacing
+            isUploading: true,
+            uploadProgress: 10,
+            error: undefined
+          }
+        : img
     );
+    imagesRef.current = currentList;
+    onChange(currentList);
 
     try {
       const result = await uploadProductImageDirect(file, (percent) => {
-        onChange(
-          images.map(img =>
-            img.id === targetId ? { ...img, uploadProgress: percent } : img
-          )
+        currentList = currentList.map(img =>
+          img.id === targetId ? { ...img, uploadProgress: percent } : img
         );
+        imagesRef.current = currentList;
+        onChange(currentList);
       });
 
       URL.revokeObjectURL(clientPreviewUrl);
+      const permanentUrl = ensurePermanentPublicImageUrl(result.publicUrl);
 
-      // Clean up old storage image asynchronously if needed
-      const oldImg = images.find(img => img.id === targetId);
+      // Clean up old storage image asynchronously if applicable
+      const oldImg = imagesRef.current.find(img => img.id === targetId);
       if (oldImg?.url && !oldImg.url.startsWith('blob:')) {
         deleteProductImageFromStorage(oldImg.url).catch(() => {});
       }
 
-      onChange(
-        images.map(img =>
-          img.id === targetId
-            ? {
-                ...img,
-                url: result.publicUrl,
-                previewUrl: undefined,
-                isUploading: false,
-                uploadProgress: 100
-              }
-            : img
-        )
+      currentList = currentList.map(img =>
+        img.id === targetId
+          ? {
+              ...img,
+              url: permanentUrl,
+              previewUrl: undefined,
+              isUploading: false,
+              uploadProgress: 100,
+              error: undefined
+            }
+          : img
       );
+      imagesRef.current = currentList;
+      onChange(currentList);
     } catch (err: any) {
-      setUploadError(err.message || 'Image replacement failed');
-      onChange(
-        images.map(img =>
-          img.id === targetId
-            ? { ...img, isUploading: false, error: err.message }
-            : img
-        )
+      const msg = err.message || 'Image replacement failed';
+      setUploadError(msg);
+      currentList = currentList.map(img =>
+        img.id === targetId
+          ? { ...img, isUploading: false, error: msg }
+          : img
       );
+      imagesRef.current = currentList;
+      onChange(currentList);
     } finally {
       setReplaceTargetId(null);
       if (replaceInputRef.current) replaceInputRef.current.value = '';
@@ -231,20 +265,23 @@ export const ProductImageManager: React.FC<ProductImageManagerProps> = ({
 
   const handleAddManualUrl = () => {
     if (!manualUrl.trim()) return;
-    const url = manualUrl.trim();
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    const rawUrl = manualUrl.trim();
+    if (!rawUrl.startsWith('http://') && !rawUrl.startsWith('https://')) {
       setUploadError('Please enter a valid HTTP or HTTPS image URL.');
       return;
     }
+    const cleanUrl = ensurePermanentPublicImageUrl(rawUrl);
     setUploadError(null);
-    const isFirst = images.length === 0;
+    const isFirst = imagesRef.current.length === 0;
     const newItem: ProductImageItem = {
       id: `url-${Date.now()}`,
-      url,
+      url: cleanUrl,
       color: '',
       is_primary: isFirst
     };
-    onChange([...images, newItem]);
+    const updated = [...imagesRef.current, newItem];
+    imagesRef.current = updated;
+    onChange(updated);
     setManualUrl('');
     setShowUrlInput(false);
   };
