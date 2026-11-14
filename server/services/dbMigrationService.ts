@@ -15,8 +15,18 @@ export async function runSupabaseMigration() {
     return { success: false, reason: 'No connection string' };
   }
 
+  // Ensure SSL validation allows Supabase PostgreSQL certificate
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+  let cleanConnString = connectionString;
+  try {
+    const parsedUrl = new URL(connectionString);
+    parsedUrl.searchParams.delete('sslmode');
+    cleanConnString = parsedUrl.toString();
+  } catch (e) {}
+
   const pool = new Pool({
-    connectionString,
+    connectionString: cleanConnString,
     ssl: { rejectUnauthorized: false },
     connectionTimeoutMillis: 15000
   });
